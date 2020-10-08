@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="292.0" prefWidth="227.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.registerMenuController">
+   <children>
+      <TextField fx:id="reg_fNameText" layoutX="39.0" layoutY="26.0" promptText="First Name" />
+      <TextField fx:id="reg_lNameText" layoutX="39.0" layoutY="65.0" promptText="Last Name" />
+      <TextField fx:id="reg_phoneText" layoutX="39.0" layoutY="104.0" promptText="Phone Number" />
+      <TextField fx:id="reg_addressText" layoutX="39.0" layoutY="180.0" promptText="Address" />
+      <Button fx:id="reg_registerBtn" layoutX="84.0" layoutY="218.0" mnemonicParsing="false" onAction="#reg_registering" text="Register" />
+      <TextField fx:id="reg_emailText" layoutX="39.0" layoutY="143.0" promptText="Email" />
+      <Button fx:id="reg_backBtn" layoutX="54.0" layoutY="252.0" mnemonicParsing="false" onAction="#reg_backToStartManu" text="Back to Start Menu" />
+   </children>
+</AnchorPane>
