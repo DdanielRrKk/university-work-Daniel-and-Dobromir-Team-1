@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="248.0" prefWidth="302.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.logInMenuController">
+   <children>
+      <TextField fx:id="li_userText" layoutX="77.0" layoutY="34.0" promptText="Username" />
+      <PasswordField fx:id="li_passText" layoutX="76.0" layoutY="88.0" promptText="Password" />
+      <Button fx:id="li_logInBtn" layoutX="96.0" layoutY="145.0" mnemonicParsing="false" onAction="#li_loggingIn" prefHeight="26.0" prefWidth="109.0" text="LogIn" />
+      <Button fx:id="li_BackBtn" layoutX="91.0" layoutY="191.0" mnemonicParsing="false" onAction="#li_backToStartManu" prefHeight="14.0" prefWidth="120.0" text="Back to Start Menu" />
+   </children>
+</AnchorPane>
