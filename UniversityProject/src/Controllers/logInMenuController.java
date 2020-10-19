@@ -1,6 +1,8 @@
 package Controllers;
 
-import Database.AccountsDAO;
+import java.sql.SQLException;
+
+import DAO.AccountsDAOImplementation;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,7 +31,7 @@ public class logInMenuController {
     private Button li_BackBtn;
 
     @FXML
-    void li_loggingIn(ActionEvent event) {
+    void li_loggingIn(ActionEvent event) throws SQLException {
     	
     	//==============================================================TESTING
     	if (li_userText.getText().equals("1") && li_passText.getText().equals("1")) {
@@ -52,7 +54,7 @@ public class logInMenuController {
     	if (li_userText.getText().isEmpty()) {showAlert(1); return;}
         if (li_passText.getText().isEmpty()) {showAlert(2);	return;}
         
-        AccountsDAO accdao = new AccountsDAO();
+        AccountsDAOImplementation accdao = new AccountsDAOImplementation();
         
         if(accdao.ValidateLogin(li_userText.getText(), li_passText.getText())) {
         	closeLogInWindow();
