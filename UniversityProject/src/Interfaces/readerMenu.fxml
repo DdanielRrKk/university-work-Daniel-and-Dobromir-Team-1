@@ -21,11 +21,6 @@
                         <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="rd_changeReturnDateBtn" mnemonicParsing="false" onAction="#rd_requestChangeReturnDate" prefHeight="32.0" prefWidth="126.0" text="Change Return Date">
-                     <VBox.margin>
-                        <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
-                     </VBox.margin>
-                  </Button>
                   <Button fx:id="rd_logOutBtn" mnemonicParsing="false" onAction="#rd_LoggingOut" prefHeight="10.0" prefWidth="74.0" text="LogOut">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="240.0" />
