@@ -5,16 +5,17 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="292.0" prefWidth="395.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.registerMenuController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="312.0" prefWidth="395.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.registerMenuController">
    <children>
-      <TextField fx:id="reg_user" layoutX="34.0" layoutY="26.0" promptText="Username" />
-      <PasswordField fx:id="reg_pass" layoutX="198.0" layoutY="26.0" promptText="Password" />
-      <TextField fx:id="reg_fNameText" layoutX="34.0" layoutY="71.0" promptText="First Name" />
-      <TextField fx:id="reg_lNameText" layoutX="198.0" layoutY="71.0" promptText="Last Name" />
-      <TextField fx:id="reg_phoneText" layoutX="34.0" layoutY="117.0" promptText="Phone Number" />
-      <TextField fx:id="reg_emailText" layoutX="198.0" layoutY="117.0" promptText="Email" />
-      <TextField fx:id="reg_addressText" layoutX="34.0" layoutY="154.0" prefHeight="49.0" prefWidth="312.0" promptText="Address" />
-      <Button fx:id="reg_registerBtn" layoutX="153.0" layoutY="215.0" mnemonicParsing="false" onAction="#reg_registering" text="Register" />
-      <Button fx:id="reg_backBtn" layoutX="263.0" layoutY="252.0" mnemonicParsing="false" onAction="#reg_backToStartManu" text="Back to Start Menu" />
+      <TextField fx:id="reg_user" layoutX="34.0" layoutY="30.0" promptText="Username" />
+      <PasswordField fx:id="reg_pass" layoutX="198.0" layoutY="30.0" promptText="Password" />
+      <TextField fx:id="reg_fNameText" layoutX="34.0" layoutY="67.0" promptText="First Name" />
+      <TextField fx:id="reg_lNameText" layoutX="198.0" layoutY="67.0" promptText="Last Name" />
+      <TextField fx:id="reg_phoneText" layoutX="34.0" layoutY="103.0" promptText="Phone Number" />
+      <TextField fx:id="reg_ucn" layoutX="198.0" layoutY="103.0" promptText="UCN" />
+      <TextField fx:id="reg_emailText" layoutX="35.0" layoutY="137.0" prefHeight="26.0" prefWidth="312.0" promptText="Email" />
+      <TextField fx:id="reg_addressText" layoutX="34.0" layoutY="174.0" prefHeight="49.0" prefWidth="312.0" promptText="Address" />
+      <Button fx:id="reg_registerBtn" layoutX="153.0" layoutY="235.0" mnemonicParsing="false" onAction="#reg_registering" text="Register" />
+      <Button fx:id="reg_backBtn" layoutX="263.0" layoutY="272.0" mnemonicParsing="false" onAction="#reg_backToStartManu" text="Back to Start Menu" />
    </children>
 </AnchorPane>
