@@ -1,5 +1,7 @@
 package Controllers;
 
+import BusinessLogic.OperatorFunctions;
+import Model.Accounts;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -17,6 +19,9 @@ public class registerMenuController {
 
     @FXML
     private TextField reg_phoneText;
+    
+    @FXML
+    private TextField reg_ucn;
 
     @FXML
     private TextField reg_addressText;
@@ -35,10 +40,24 @@ public class registerMenuController {
 
     @FXML
     private PasswordField reg_pass;
+    
+    OperatorFunctions of=new OperatorFunctions();
 
     @FXML
     void reg_registering(ActionEvent event) {
+    	Accounts acc=new Accounts();
+    	acc.setUsername(reg_user.getText());
+    	acc.setPassword(reg_pass.getText());
+    	acc.setFirstName(reg_fNameText.getText());
+    	acc.setLastName(reg_lNameText.getText());
+    	acc.setPhoneNumber(reg_phoneText.getText());
+    	acc.setEmail(reg_emailText.getText());
+    	acc.setUCN(reg_ucn.getText());
+    	acc.setAddress(reg_addressText.getText());
+    	acc.setRoleID(3);
+    	acc.setRatingID(1);
     	
+    	of.registerRequest(acc);
     }
     
     @FXML
