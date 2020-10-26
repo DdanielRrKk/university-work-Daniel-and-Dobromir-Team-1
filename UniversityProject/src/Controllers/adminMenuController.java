@@ -1,22 +1,23 @@
 package Controllers;
 
-import javafx.collections.FXCollections;
+import java.util.Optional;
+
+import Model.Accounts;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -41,42 +42,6 @@ public class adminMenuController {
     @FXML
     void adm_add(ActionEvent event) { 	
     	adm_border.setRight(null);
-    	VBox vb=new VBox();
-    	
-    	TextField tf1=new TextField();
-    	tf1.setPromptText("Username");
-    	vb.getChildren().add(tf1);
-    	vb.setMargin(tf1, new Insets(5,10,5,10));
-    	
-    	TextField tf2=new TextField();
-    	tf2.setPromptText("Password");
-    	vb.getChildren().add(tf2);
-    	vb.setMargin(tf2, new Insets(5,10,5,10));
-    	
-    	TextField tf3=new TextField();
-    	tf3.setPromptText("First Name");
-    	vb.getChildren().add(tf3);
-    	vb.setMargin(tf3, new Insets(5,10,5,10));
-    	
-    	TextField tf4=new TextField();
-    	tf4.setPromptText("Last Name");
-    	vb.getChildren().add(tf4);
-    	vb.setMargin(tf4, new Insets(5,10,5,10));
-    	
-    	TextField tf5=new TextField();
-    	tf5.setPromptText("Phone Number");
-    	vb.getChildren().add(tf5);
-    	vb.setMargin(tf5, new Insets(5,10,5,10));
-    	
-    	TextField tf6=new TextField();
-    	tf6.setPromptText("Email");
-    	vb.getChildren().add(tf6);
-    	vb.setMargin(tf6, new Insets(5,10,5,10));
-    	
-    	TextField tf7=new TextField();
-    	tf7.setPromptText("Address");
-    	vb.getChildren().add(tf7);
-    	vb.setMargin(tf7, new Insets(5,10,5,10));
     	
     	Button btnReg=new Button();
     	btnReg.setText("Register");
@@ -93,10 +58,19 @@ public class adminMenuController {
             } 
         };
         btnReg.setOnAction(ev);
+        
+        VBox vb=new VBox();
+        addTextFieldToVBox(vb, "Username");
+        addTextFieldToVBox(vb, "Password");
+        addTextFieldToVBox(vb, "First Name");
+        addTextFieldToVBox(vb, "Last Name");
+        addTextFieldToVBox(vb, "Phone Number");
+        addTextFieldToVBox(vb, "Email");
+        addTextFieldToVBox(vb, "Address");
         vb.getChildren().add(btnReg);
-        vb.setMargin(btnReg, new Insets(5,10,5,10));
     	
     	vb.setAlignment(Pos.CENTER);
+    	vb.setSpacing(5);
     	
     	adm_border.setCenter(vb);
     }
@@ -105,58 +79,42 @@ public class adminMenuController {
     void adm_remove(ActionEvent event) {
     	adm_border.setRight(null);
     	
-    	// ============ vbox 2
-    	VBox vb2=new VBox();
-    	Label l1=new Label("Remove Operator");
-    	vb2.getChildren().add(l1);
-    	vb2.setMargin(l1, new Insets(5,10,5,10));
-    	
-    	TableView table = new TableView();
+    	TableView<Accounts> table = new TableView<>();
     	table.setEditable(false);
-    	TableColumn idCol = new TableColumn("ID");
+    	
+    	TableColumn<Accounts, Integer> idCol = new TableColumn<>("ID");
+    	idCol.setCellValueFactory(new PropertyValueFactory<>("ID"));
     	idCol.setMaxWidth(30);
-    	TableColumn uNameCol = new TableColumn("Username");
-    	TableColumn fNameCol = new TableColumn("First Name");
-        TableColumn lNameCol = new TableColumn("Last Name");
-        table.getColumns().addAll(idCol,uNameCol, fNameCol, lNameCol);
-        table.setMaxWidth(370);
-    	vb2.getChildren().add(table);
-    	vb2.setMargin(table, new Insets(5,10,5,10));
     	
-    	// ============== vbox 1
-        VBox vb=new VBox();
-    	TextField tf1=new TextField();
-    	tf1.setPromptText("Operator Username");
-    	vb.getChildren().add(tf1);
-    	vb.setMargin(tf1, new Insets(5,10,5,10));
+    	TableColumn<Accounts, String> fNameCol = new TableColumn<>("First Name");
+    	fNameCol.setCellValueFactory(new PropertyValueFactory<>("firstName"));
     	
-    	Button btn1=new Button();
-    	btn1.setText("Search");
-    	EventHandler<ActionEvent> ev = new EventHandler<ActionEvent>() { 
-            public void handle(ActionEvent e) 
-            { 
-            	Alert alert = new Alert(AlertType.INFORMATION, "Operator successfuly found");
-        		alert.setTitle("Success");
-        		alert.setHeaderText(null);
-        		alert.setGraphic(null);
-        		alert.showAndWait();
-        		
-        		Label l3=new Label("Username");
-            	vb.getChildren().add(l3);
-            	vb.setMargin(l3, new Insets(5,10,5,10));
-        		
-        		Label l1=new Label("First Name");
-            	vb.getChildren().add(l1);
-            	vb.setMargin(l1, new Insets(5,10,5,10));
-            	
-            	Label l2=new Label("Last Name");
-            	vb.getChildren().add(l2);
-            	vb.setMargin(l2, new Insets(5,10,5,10));
-            } 
-        };
-        btn1.setOnAction(ev);
-        vb.getChildren().add(btn1);
-        vb.setMargin(btn1, new Insets(5,10,5,10));
+        TableColumn<Accounts, String> lNameCol = new TableColumn<>("Last Name");
+        lNameCol.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        
+        TableColumn<Accounts, String> ucnCol = new TableColumn<>("UCN");
+        ucnCol.setCellValueFactory(new PropertyValueFactory<>("UCN"));
+        
+        TableColumn<Accounts, String> phoneCol = new TableColumn<>("Phone");
+        phoneCol.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
+        
+        TableColumn<Accounts, String> emailCol = new TableColumn<>("Email");
+        emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
+        
+        TableColumn<Accounts, String> addressCol = new TableColumn<>("Address");
+        addressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
+        
+        table.getColumns().addAll(idCol, fNameCol, lNameCol, ucnCol,  phoneCol, emailCol, addressCol);
+    	
+        ObservableList<Accounts> ola=table.getItems();
+        FilteredList<Accounts> flPerson = new FilteredList(ola, p -> true);
+        table.setItems(flPerson);
+        
+        TextField tf = new TextField();
+        tf.setPromptText("Search UCN");
+        tf.setOnKeyReleased(keyEvent -> {
+         	flPerson.setPredicate(p -> p.getUCN().contains(tf.getText().trim()));            
+        });
         
         Button btn2=new Button();
     	btn2.setText("Remove");
@@ -167,49 +125,67 @@ public class adminMenuController {
         		alert.setTitle("Alert");
         		alert.setHeaderText(null);
         		alert.setGraphic(null);
-        		alert.showAndWait();
         		
-        		// remove operator from db function
+        		Optional<ButtonType> result = alert.showAndWait();
+        		if (result.get() == ButtonType.OK){
+        		    // remove from db
+        		} else {
+        		    // nothig
+        		}
             } 
         };
         btn2.setOnAction(ev2);
         
-        //========== vbox 3
-        VBox vb3=new VBox();
-        vb3.getChildren().add(vb);
-        vb3.setMargin(vb, new Insets(5,10,5,10));
-        vb3.getChildren().add(btn2);
-        vb3.setMargin(btn2, new Insets(5,10,5,10));
+    	VBox vb=new VBox();
+    	vb.getChildren().add(new Label("Remove Operator"));
+    	vb.getChildren().add(tf);
+    	vb.getChildren().add(table);
+    	vb.getChildren().add(btn2);
     	
     	vb.setAlignment(Pos.CENTER);
-    	vb2.setAlignment(Pos.CENTER);
-    	vb3.setAlignment(Pos.CENTER);
+    	vb.setSpacing(5);
     	
-    	adm_border.setRight(vb2);
-    	adm_border.setCenter(vb3);
+    	adm_border.setCenter(vb);
     }
     
     @FXML
     void adm_showOperators(ActionEvent event) {
     	adm_border.setRight(null);
-    	VBox vb=new VBox();
     	
-    	Label l1=new Label("All Operators");
-    	vb.getChildren().add(l1);
-    	vb.setMargin(l1, new Insets(5,10,5,10));
-    	
-    	TableView table = new TableView();
+    	TableView<Accounts> table = new TableView<>();
     	table.setEditable(false);
-    	TableColumn idCol = new TableColumn("ID");
+    	
+    	TableColumn<Accounts, Integer> idCol = new TableColumn<>("ID");
+    	idCol.setCellValueFactory(new PropertyValueFactory<>("ID"));
     	idCol.setMaxWidth(30);
-    	TableColumn uNameCol = new TableColumn("Username");
-    	TableColumn fNameCol = new TableColumn("First Name");
-        TableColumn lNameCol = new TableColumn("Last Name");
-        table.getColumns().addAll(idCol,uNameCol, fNameCol, lNameCol);
-        vb.getChildren().add(table);
-    	vb.setMargin(table, new Insets(5,10,5,10));
+    	
+    	TableColumn<Accounts, String> fNameCol = new TableColumn<>("First Name");
+    	fNameCol.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+    	
+        TableColumn<Accounts, String> lNameCol = new TableColumn<>("Last Name");
+        lNameCol.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        
+        TableColumn<Accounts, String> ucnCol = new TableColumn<>("UCN");
+        ucnCol.setCellValueFactory(new PropertyValueFactory<>("UCN"));
+        
+        TableColumn<Accounts, String> phoneCol = new TableColumn<>("Phone");
+        phoneCol.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
+        
+        TableColumn<Accounts, String> emailCol = new TableColumn<>("Email");
+        emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
+        
+        TableColumn<Accounts, String> addressCol = new TableColumn<>("Address");
+        addressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
+        
+        table.getColumns().addAll(idCol, fNameCol, lNameCol, ucnCol,  phoneCol, emailCol, addressCol);
+    	
+    	
+    	VBox vb=new VBox();
+    	vb.getChildren().add(new Label("All Operators"));
+    	vb.getChildren().add(table);
     	
     	vb.setAlignment(Pos.CENTER);
+    	vb.setSpacing(5);
     	
     	adm_border.setCenter(vb);
     }
@@ -223,6 +199,15 @@ public class adminMenuController {
     
     private void closeAdminMenuWindow() {
     	((Stage)adm_logOutBtn.getScene().getWindow()).close();
+    }
+    
+    //=======FOR VBOX
+    
+    private void addTextFieldToVBox(VBox vb, String txt) {
+    	
+    	TextField tf=new TextField();
+    	tf.setPromptText(txt);
+    	vb.getChildren().add(tf);
     }
 
 }
