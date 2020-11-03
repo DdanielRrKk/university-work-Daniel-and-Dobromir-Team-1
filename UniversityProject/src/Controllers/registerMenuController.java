@@ -1,74 +1,99 @@
-package Controllers;
+package DAO;
 
-import BusinessLogic.OperatorFunctions;
-import Model.Accounts;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.stage.Stage;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class registerMenuController {
+import Model.Books;
 
-    @FXML
-    private TextField reg_fNameText;
+public class BooksDAOImplementation implements BooksDAO 
+{
+	private static Connection connection = DatabaseConnection.getInstance().getConnection();
+	
+	@Override
+	public Books SelectWhereID(int ID) throws SQLException 
+	{
+		PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM BOOKS WHERE ID = ?");
+		preparedStatement.setInt(1, ID);
+		
+		Books oBook = new Books();
+		
+		ResultSet rs = preparedStatement.executeQuery();
+		boolean check = false;
+		
+		while(rs.next())
+		{
+			check = true;
+			oBook.setID(rs.getInt("ID"));
+			oBook.setTitle(rs.getString("TITLE"));
+			oBook.setAuthor(rs.getString("AUTHOR"));
+			oBook.setGenre(rs.getString("GENRE"));
+			oBook.setCondition(rs.getInt("CONDITION_ID"));
+			oBook.setAvailable(rs.getBoolean("AVALIABLE"));
+		}
+		
+		if(check == true)
+			return oBook;
+		else
+			return null;
+	}
 
-    @FXML
-    private TextField reg_lNameText;
+	@Override
+	public List<Books> SelectAll() throws SQLException 
+	{
+		List<Books> oBooksList = new ArrayList<Books>();
+		PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM BOOKS");
+		ResultSet rs = preparedStatement.executeQuery();
+		
+		while(rs.next())
+		{
+			Books oBook = new Books();
+			oBook.setID(rs.getInt("ID"));
+			oBook.setTitle(rs.getString("TITLE"));
+			oBook.setAuthor(rs.getString("AUTHOR"));
+			oBook.setGenre(rs.getString("GENRE"));
+			oBook.setCondition(rs.getInt("CONDITION_ID"));
+			oBook.setAvailable(rs.getBoolean("AVALIABLE"));
+			oBooksList.add(oBook);
+		}
+	
+		return oBooksList;
+	}
 
-    @FXML
-    private TextField reg_phoneText;
-    
-    @FXML
-    private TextField reg_ucn;
+	@Override
+	public int Insert(Books oBook) throws SQLException 
+	{
+		String strQuery = "INSERT INTO BOOKS (TITLE, AUTHOR, GENRE, CONDITION_ID, AVALIABLE) VALUES (?, ?, ?, ?, ?)";
+		PreparedStatement preparedStatement = connection.prepareStatement(strQuery);
+		preparedStatement.setString(1, oBook.getTitle());
+		preparedStatement.setString(2, oBook.getAuthor());
+		preparedStatement.setString(3, oBook.getGenre());
+		preparedStatement.setInt(4, oBook.getCondition());
+		preparedStatement.setBoolean(5, oBook.getAvailable());
+		return preparedStatement.executeUpdate();
+	}
 
-    @FXML
-    private TextField reg_addressText;
+	@Override
+	public int DeleteWhereID(int ID) throws SQLException 
+	{
+		PreparedStatement preparedStatement  = connection.prepareStatement("DELETE FROM BOOKS WHERE ID = ?");
+	    preparedStatement.setInt(1, ID);
+	    return preparedStatement.executeUpdate();
+	}
 
-    @FXML
-    private Button reg_registerBtn;
-
-    @FXML
-    private TextField reg_emailText;
-    
-    @FXML
-    private Button reg_backBtn;
-    
-    @FXML
-    private TextField reg_user;
-
-    @FXML
-    private PasswordField reg_pass;
-    
-    OperatorFunctions of=new OperatorFunctions();
-
-    @FXML
-    void reg_registering(ActionEvent event) {
-    	Accounts acc=new Accounts();
-    	acc.setUsername(reg_user.getText());
-    	acc.setPassword(reg_pass.getText());
-    	acc.setFirstName(reg_fNameText.getText());
-    	acc.setLastName(reg_lNameText.getText());
-    	acc.setPhoneNumber(reg_phoneText.getText());
-    	acc.setEmail(reg_emailText.getText());
-    	acc.setUCN(reg_ucn.getText());
-    	acc.setAddress(reg_addressText.getText());
-    	acc.setRoleID(3);
-    	acc.setRatingID(1);
-    	
-    	of.registerRequest(acc);
-    }
-    
-    @FXML
-    void reg_backToStartManu(ActionEvent event) {
-    	closeRegisterWindow();
-    	fxmlScreenLoader fcl=new fxmlScreenLoader();
-    	fcl.loadScreen("../Interfaces/startMenu.fxml");
-    }
-    
-    private void closeRegisterWindow() {
-    	((Stage)reg_backBtn.getScene().getWindow()).close();
-    }
-
+	@Override
+	public void UpdateWhereID(int ID, Books oBook) throws SQLException 
+	{
+		String strQuery = "UPDATE BOOKS SET TITLE = ?, SET AUTHOR = ?, SET GENRE = ?, SET CONDITION_ID = ?, SET AVAILABLE = ? WHERE ID = ?";
+		PreparedStatement preparedStatement = connection.prepareStatement(strQuery);
+		preparedStatement.setString(1, oBook.getTitle());
+		preparedStatement.setString(2, oBook.getAuthor());
+		preparedStatement.setString(3, oBook.getGenre());
+		preparedStatement.setInt(4, oBook.getCondition());
+		preparedStatement.setBoolean(5, oBook.getAvailable());
+		preparedStatement.executeUpdate();
+	}
 }
