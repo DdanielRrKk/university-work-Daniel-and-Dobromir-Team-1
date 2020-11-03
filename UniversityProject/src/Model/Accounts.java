@@ -13,6 +13,7 @@ public class Accounts
 	private String Password;
 	private int RoleID;
 	private int RatingID;
+	
 	public Accounts() 
 	{
 	}
@@ -45,91 +46,30 @@ public class Accounts
 		this.RatingID = ratingID;
 	}
 	
-	public long getID() {
-		return ID;
-	}
+	// setters
+	public void setID(int ID) {	this.ID = ID; }
+	public void setFirstName(String firstName) { FirstName = firstName; }
+	public void setLastName(String lastName) { LastName = lastName; }
+	public void setUCN(String ucn) { UCN = ucn; }
+	public void setPhoneNumber(String phoneNumber) { PhoneNumber = phoneNumber; }
+	public void setEmail(String email) { Email = email; }
+	public void setAddress(String address) { Address = address; }
+	public void setUsername(String username) { Username = username; }
+	public void setPassword(String password) { Password = password; }
+	public void setRoleID(Integer roleID) { RoleID = roleID; }
+	public void setRatingID(Integer ratingID) { RatingID = ratingID; }
 	
-	public void setID(int ID) {
-		ID = ID;
-	}
+	// getters
+	public int getID() { return ID; }
+	public String getFirstName() { return FirstName; }
+	public String getLastName() { return LastName; }
+	public String getUCN() { return UCN; }
+	public String getPhoneNumber() { return PhoneNumber; }
+	public String getEmail() { return Email; }
+	public String getAddress() { return Address; }
+	public String getUsername() { return Username; }
+	public String getPassword() { return Password; }
+	public int getRoleID() { return RoleID; }
+	public int getRatingID() { return RatingID; }
 
-	public String getFirstName() {
-		return FirstName;
-	}
-
-	public void setFirstName(String firstName) {
-		FirstName = firstName;
-	}
-
-	public String getLastName() {
-		return LastName;
-	}
-
-	public void setLastName(String lastName) {
-		LastName = lastName;
-	}
-
-	public String getUCN() {
-		return UCN;
-	}
-
-	public void setUCN(String uCN) {
-		UCN = uCN;
-	}
-
-	public String getPhoneNumber() {
-		return PhoneNumber;
-	}
-
-	public void setPhoneNumber(String phoneNumber) {
-		PhoneNumber = phoneNumber;
-	}
-
-	public String getEmail() {
-		return Email;
-	}
-
-	public void setEmail(String email) {
-		Email = email;
-	}
-	
-	public String getAddress() {
-		return Address;
-	}
-	
-	public void setAddress(String address) {
-		Address = address;
-	}
-
-	public String getUsername() {
-		return Username;
-	}
-
-	public void setUsername(String username) {
-		Username = username;
-	}
-
-	public String getPassword() {
-		return Password;
-	}
-
-	public void setPassword(String password) {
-		Password = password;
-	}
-
-	public int getRoleID() {
-		return RoleID;
-	}
-
-	public void setRoleID(Integer roleID) {
-		RoleID = roleID;
-	}
-
-	public int getRatingID() {
-		return RatingID;
-	}
-
-	public void setRatingID(Integer ratingID) {
-		RatingID = ratingID;
-	}
 }
