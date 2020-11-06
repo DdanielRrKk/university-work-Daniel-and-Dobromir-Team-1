@@ -66,15 +66,11 @@ public class operatorMenuController {
 
     @FXML
     private Button opr_notificationsBtn;
-    
-    @FXML
-    private Label opr_lblNumber;
 
     @FXML
     private Button opr_logOutBtn;
     
     private OperatorFunctions of=new OperatorFunctions();
-    private static Label tempLabel=new Label("0");
 
     //================================================ADD BOOK
     @FXML
@@ -542,8 +538,7 @@ public class operatorMenuController {
     //=======================================NOTIFICATIONS
     @FXML
     void notifications(ActionEvent event) {
-    	of.notifyOperator(opr_lblNumber);
-    	tempLabel=opr_lblNumber;
+    	
     }
     
     //=======================================LOGOUT
