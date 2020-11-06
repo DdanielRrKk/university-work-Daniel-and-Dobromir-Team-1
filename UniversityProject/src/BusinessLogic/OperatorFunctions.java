@@ -11,7 +11,6 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
@@ -21,6 +20,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import tray.animations.AnimationType;
+import tray.notification.NotificationType;
+import tray.notification.TrayNotification;
 
 public class OperatorFunctions {
 	
@@ -28,19 +30,11 @@ public class OperatorFunctions {
     private BooksDAOImplementation bdi=new BooksDAOImplementation();
 	 
     private static boolean registerFlag;
-    private Task<Void> notify;
     
-	//=============ADD READER REQUEST
-	public void registerRequest(Accounts acc) {
-		registerFlag=true;
-		
-		//....
-	}
-	
-	//=============NOTIFICATIONS
-	public void notifyOperator(Label lbl) {
-			
-		notify=new Task<Void>() {
+  //=============THREAD
+    public void startNotifyThread() {
+    	
+    	Task<Void> notify=new Task<Void>() {
 
 			@Override
 			protected Void call() throws Exception {
@@ -50,9 +44,9 @@ public class OperatorFunctions {
 
 							@Override
 							public void run() {
-								int numb=Integer.parseInt(lbl.getText());
-								numb++;
-								lbl.setText(String.valueOf(numb));
+								TrayNotification tray = new TrayNotification("New Notification", "A new Reader is waiting to be approved", NotificationType.INFORMATION);
+						        tray.setAnimationType(AnimationType.POPUP);
+						        tray.showAndWait();
 							}
 							
 						});
@@ -71,6 +65,9 @@ public class OperatorFunctions {
 			@Override
 			public void handle(WorkerStateEvent arg0) {
 				registerFlag=false;
+				Thread thr=new Thread(notify);
+				thr.setDaemon(true);
+				thr.start();
 			}
 				
 		});
@@ -78,6 +75,13 @@ public class OperatorFunctions {
 		Thread th=new Thread(notify);
 		th.setDaemon(true);
 		th.start();
+    }
+    
+	//=============ADD READER REQUEST
+	public void registerRequest(Accounts acc) {
+		registerFlag=true;
+		
+		//....
 	}
     
     //========FOR ACCOUNTS
