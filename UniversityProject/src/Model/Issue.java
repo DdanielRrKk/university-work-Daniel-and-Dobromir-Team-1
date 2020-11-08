@@ -11,12 +11,13 @@ public class Issue
 	private Date ReturnDate;
 	private Date ReturnedDate;
 	private int ReturnedCondition;
+	private boolean Approved;
 	
 	public Issue()
 	{
 	}
 	
-	public Issue(int bookID, int accountID, Date issueDate, Date returnDate, Date returnedDate, int returnedCondition) 
+	public Issue(int bookID, int accountID, Date issueDate, Date returnDate, Date returnedDate, int returnedCondition, boolean approvedIssue) 
 	{
 		BookID = bookID;
 		AccountID = accountID;
@@ -24,9 +25,10 @@ public class Issue
 		ReturnDate = returnDate;
 		ReturnedDate = returnedDate;
 		ReturnedCondition = returnedCondition;
+		Approved = approvedIssue;
 	}
 
-	public Issue(int iD, int bookID, int accountID, Date issueDate, Date returnDate, Date returnedDate, int returnedCondition) 
+	public Issue(int iD, int bookID, int accountID, Date issueDate, Date returnDate, Date returnedDate, int returnedCondition, boolean approvedIssue) 
 	{
 		ID = iD;
 		BookID = bookID;
@@ -35,6 +37,7 @@ public class Issue
 		ReturnDate = returnDate;
 		ReturnedDate = returnedDate;
 		ReturnedCondition = returnedCondition;
+		Approved = approvedIssue;
 	}
 
 	public int getID() {
@@ -93,5 +96,14 @@ public class Issue
 		ReturnedCondition = returnedCondition;
 	}
 	
+	public boolean isApproved()
+	{
+		return this.Approved;
+	}
 	
+	public void setApproved(boolean approvedIssue)
+	{
+		this.Approved = approvedIssue;
+	}
+		
 }
