@@ -1,18 +1,33 @@
 package Controllers;
 
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import BusinessLogic.AccountsData;
+import Interfaces.Main;
 import Model.Accounts;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -22,192 +37,335 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class adminMenuController {
-	
-	@FXML
-    private BorderPane adm_border;
 
-    @FXML
-    private Button adm_addBtn;
+public class adminMenuController implements Initializable
+{
+	@FXML private BorderPane adm_border;
+    
+    @FXML private Button adm_showOperators;
 
-    @FXML
-    private Button adm_removeBtn;
+    @FXML private Button adm_logOutBtn;
+    
+    @FXML private TableView<Accounts> operatorsTable;
+    
+    @FXML private TableColumn<Accounts, Integer> idColumn;
+    @FXML private TableColumn<Accounts, String> firstNameColumn;
+    @FXML private TableColumn<Accounts, String> lastNameColumn;
+    @FXML private TableColumn<Accounts, String> ucnColumn;
+    @FXML private TableColumn<Accounts, String> phoneNumberColumn;
+    @FXML private TableColumn<Accounts, String> emailColumn;
+    @FXML private TableColumn<Accounts, String> addressColumn;
+    
+    @FXML private ContextMenu contextMenuTable;
+    
+    @FXML private MenuItem menuItemAddOperator;
+
+    @FXML private MenuItem menuItemRemoveOperator;
+    
+    private TextField username = new TextField(); 
+    private PasswordField password = new PasswordField();
+    private TextField firstName = new TextField();
+    private TextField lastName = new TextField();
+    private TextField ucn = new TextField();
+    private TextField phoneNumber = new TextField();
+    private TextField email = new TextField();
+    private TextField address = new TextField();
+    private Button btnRegister = new Button();
+    
+    private static final int USERNAME_SIZE = 32;
+    private static final int PASSWORD_SIZE = 32;
+    private static final int FIRST_NAME_SIZE = 32;
+    private static final int LAST_NAME_SIZE = 32;
+    private static final int UCN_SIZE = 16;
+    private static final int PHONE_NUMBER_SIZE = 16;
+    private static final int EMAIL_SIZE = 32;
+    private static final int ADDRESS_SIZE = 512; 
     
     @FXML
-    private Button adm_showOperators;
-
-    @FXML
-    private Button adm_logOutBtn;
-    
-    @FXML
-    void adm_add(ActionEvent event) { 	
-    	adm_border.setRight(null);
-    	
-    	Button btnReg=new Button();
-    	btnReg.setText("Register");
-    	EventHandler<ActionEvent> ev = new EventHandler<ActionEvent>() { 
-            public void handle(ActionEvent e) 
-            { 
-            	Alert alert = new Alert(AlertType.INFORMATION, "You have successfuly created an Operator account", ButtonType.OK);
-        		alert.setTitle("Success");
-        		alert.setHeaderText(null);
-        		alert.setGraphic(null);
-        		alert.showAndWait();
-        		
-        		// register operator in db
-            } 
-        };
-        btnReg.setOnAction(ev);
-        
+    void addOperator(ActionEvent event) 
+    {
         VBox vb=new VBox();
-        addTextFieldToVBox(vb, "Username");
-        addTextFieldToVBox(vb, "Password");
-        addTextFieldToVBox(vb, "First Name");
-        addTextFieldToVBox(vb, "Last Name");
-        addTextFieldToVBox(vb, "Phone Number");
-        addTextFieldToVBox(vb, "Email");
-        addTextFieldToVBox(vb, "Address");
-        vb.getChildren().add(btnReg);
-    	
+        vb.getChildren().add(username);
+        vb.getChildren().add(password);
+        vb.getChildren().add(firstName);
+        vb.getChildren().add(lastName);
+        vb.getChildren().add(ucn);
+        vb.getChildren().add(phoneNumber);
+        vb.getChildren().add(email);
+        vb.getChildren().add(address);        
+        vb.getChildren().add(btnRegister);
     	vb.setAlignment(Pos.CENTER);
-    	vb.setSpacing(5);
-    	
+    	vb.setSpacing(15);
     	adm_border.setCenter(vb);
+    }
+    
+    void EmptyTextFields()
+    {
+    	username.setText(null);
+    	password.setText(null);
+    	firstName.setText(null);
+    	lastName.setText(null);
+    	ucn.setText(null);
+    	phoneNumber.setText(null);
+    	email.setText(null);
+    	address.setText(null);
     }
 
     @FXML
-    void adm_remove(ActionEvent event) {
-    	adm_border.setRight(null);
-    	
-    	TableView<Accounts> table = new TableView<>();
-    	table.setEditable(false);
-    	
-    	TableColumn<Accounts, Integer> idCol = new TableColumn<>("ID");
-    	idCol.setCellValueFactory(new PropertyValueFactory<>("ID"));
-    	idCol.setMaxWidth(30);
-    	
-    	TableColumn<Accounts, String> fNameCol = new TableColumn<>("First Name");
-    	fNameCol.setCellValueFactory(new PropertyValueFactory<>("firstName"));
-    	
-        TableColumn<Accounts, String> lNameCol = new TableColumn<>("Last Name");
-        lNameCol.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-        
-        TableColumn<Accounts, String> ucnCol = new TableColumn<>("UCN");
-        ucnCol.setCellValueFactory(new PropertyValueFactory<>("UCN"));
-        
-        TableColumn<Accounts, String> phoneCol = new TableColumn<>("Phone");
-        phoneCol.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
-        
-        TableColumn<Accounts, String> emailCol = new TableColumn<>("Email");
-        emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
-        
-        TableColumn<Accounts, String> addressCol = new TableColumn<>("Address");
-        addressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
-        
-        table.getColumns().addAll(idCol, fNameCol, lNameCol, ucnCol,  phoneCol, emailCol, addressCol);
-    	
-        ObservableList<Accounts> ola=table.getItems();
-        FilteredList<Accounts> flPerson = new FilteredList(ola, p -> true);
-        table.setItems(flPerson);
-        
-        TextField tf = new TextField();
-        tf.setPromptText("Search UCN");
-        tf.setOnKeyReleased(keyEvent -> {
-         	flPerson.setPredicate(p -> p.getUCN().contains(tf.getText().trim()));            
-        });
-        
-        Button btn2=new Button();
-    	btn2.setText("Remove");
-    	EventHandler<ActionEvent> ev2 = new EventHandler<ActionEvent>() { 
-            public void handle(ActionEvent e) 
-            { 
-            	Alert alert = new Alert(AlertType.CONFIRMATION, "Do you want to remove this operator?");
-        		alert.setTitle("Alert");
-        		alert.setHeaderText(null);
-        		alert.setGraphic(null);
-        		
-        		Optional<ButtonType> result = alert.showAndWait();
-        		if (result.get() == ButtonType.OK){
-        		    // remove from db
-        		} else {
-        		    // nothig
-        		}
-            } 
-        };
-        btn2.setOnAction(ev2);
-        
-    	VBox vb=new VBox();
-    	vb.getChildren().add(new Label("Remove Operator"));
-    	vb.getChildren().add(tf);
-    	vb.getChildren().add(table);
-    	vb.getChildren().add(btn2);
-    	
-    	vb.setAlignment(Pos.CENTER);
-    	vb.setSpacing(5);
-    	
-    	adm_border.setCenter(vb);
+    void removeOperator(ActionEvent event) 
+    {
+    	Accounts oAccount = operatorsTable.getSelectionModel().getSelectedItem();
+    	AccountsData oAccountData = new AccountsData();
+    	try 
+    	{
+			oAccountData.DeleteWhereID(oAccount.getID());
+		} catch (SQLException e) 
+    	{
+			e.printStackTrace();
+		}
+    	operatorsTable.getItems().remove(oAccount);
     }
     
     @FXML
     void adm_showOperators(ActionEvent event) {
-    	adm_border.setRight(null);
+    	adm_border.setCenter(null);
     	
-    	TableView<Accounts> table = new TableView<>();
-    	table.setEditable(false);
-    	
-    	TableColumn<Accounts, Integer> idCol = new TableColumn<>("ID");
-    	idCol.setCellValueFactory(new PropertyValueFactory<>("ID"));
-    	idCol.setMaxWidth(30);
-    	
-    	TableColumn<Accounts, String> fNameCol = new TableColumn<>("First Name");
-    	fNameCol.setCellValueFactory(new PropertyValueFactory<>("firstName"));
-    	
-        TableColumn<Accounts, String> lNameCol = new TableColumn<>("Last Name");
-        lNameCol.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-        
-        TableColumn<Accounts, String> ucnCol = new TableColumn<>("UCN");
-        ucnCol.setCellValueFactory(new PropertyValueFactory<>("UCN"));
-        
-        TableColumn<Accounts, String> phoneCol = new TableColumn<>("Phone");
-        phoneCol.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
-        
-        TableColumn<Accounts, String> emailCol = new TableColumn<>("Email");
-        emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
-        
-        TableColumn<Accounts, String> addressCol = new TableColumn<>("Address");
-        addressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
-        
-        table.getColumns().addAll(idCol, fNameCol, lNameCol, ucnCol,  phoneCol, emailCol, addressCol);
-    	
-    	
-    	VBox vb=new VBox();
-    	vb.getChildren().add(new Label("All Operators"));
-    	vb.getChildren().add(table);
-    	
-    	vb.setAlignment(Pos.CENTER);
-    	vb.setSpacing(5);
-    	
-    	adm_border.setCenter(vb);
+    	adm_border.setCenter(operatorsTable);
     }
     
     @FXML
-    void adm_LoggingOut(ActionEvent event) {
-    	closeAdminMenuWindow();
-    	fxmlScreenLoader fcl=new fxmlScreenLoader();
-    	fcl.loadScreen("../Interfaces/logInMenu.fxml");
+    void adm_LoggingOut(ActionEvent event) 
+    {
+    	Main.getInstance().setScene("../Interfaces/logInMenu.fxml");
     }
     
-    private void closeAdminMenuWindow() {
+    private void closeAdminMenuWindow() 
+    {
     	((Stage)adm_logOutBtn.getScene().getWindow()).close();
     }
-    
-    //=======FOR VBOX
-    
-    private void addTextFieldToVBox(VBox vb, String txt) {
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) 
+	{
+		//setting placeholder text for text and password fields
+		username.setPromptText("Username");
+        password.setPromptText("Password");
+        firstName.setPromptText("First Name");        
+        lastName.setPromptText("Last Name");        
+        ucn.setPromptText("UCN");        
+        phoneNumber.setPromptText("Phone Number");        
+        email.setPromptText("Email");       
+        address.setPromptText("Address");
+        btnRegister.setText("Register");
+        btnRegister.setOnAction( e -> onRegister(e));
+        
+        setupTable();
+        fillTable();             	
+	}
+	
+	private void onRegister(ActionEvent e)
+	{
+		if(!validateData())
+    	{
+    		return;
+    	}
+		
+    	Accounts oAccount = new Accounts();
+    	oAccount.setUsername(username.getText());
+    	oAccount.setPassword(password.getText());
+    	oAccount.setFirstName(firstName.getText());
+    	oAccount.setLastName(lastName.getText());
+    	oAccount.setUCN(ucn.getText());
+    	oAccount.setPhoneNumber(phoneNumber.getText());
+    	oAccount.setEmail(email.getText());
+    	oAccount.setAddress(address.getText());
+    	oAccount.setRoleID(2);
+    	oAccount.setRatingID(5);
     	
-    	TextField tf=new TextField();
-    	tf.setPromptText(txt);
-    	vb.getChildren().add(tf);
+    	AccountsData oAccountData = new AccountsData();
+    	try 
+    	{
+			oAccountData.Insert(oAccount);
+			operatorsTable.getItems().add(oAccount);
+		} catch (SQLException e1) 
+    	{
+			e1.printStackTrace();
+		}
+    	EmptyTextFields();
+    	adm_border.setCenter(null);
+    	adm_border.setCenter(operatorsTable);
+	}
+	
+	private void setupTable()
+	{
+    	idColumn.setCellValueFactory(new PropertyValueFactory<>("ID")); 	
+    	firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));    	
+        lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));        
+        ucnColumn.setCellValueFactory(new PropertyValueFactory<>("UCN"));        
+        phoneNumberColumn.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));      
+        emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));        
+        addressColumn.setCellValueFactory(new PropertyValueFactory<>("address"));              
+	}
+	
+	private void fillTable()
+	{
+		List<Accounts> list = new ArrayList<Accounts>();
+    	AccountsData oAccountData = new AccountsData();
+    	try 
+    	{
+			list = oAccountData.SelectAllOperators();
+		} catch (SQLException e) 
+    	{
+			e.printStackTrace();
+		}
+    	
+    	for(Accounts oAccount : list)
+    	{
+    		operatorsTable.getItems().add(oAccount);
+    	}
+	}
+	
+	private void infoBox(String infoMessage, String headerText, String title) 
+    {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setContentText(infoMessage);
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+        alert.showAndWait();
     }
+	
+	private boolean validateData()
+	{
+		boolean validData = true;
+		StringBuilder infoMessage = new StringBuilder();
+		
+		if(username.getText().isEmpty() || password.getText().isEmpty() || firstName.getText().isEmpty() || lastName.getText().isEmpty() ||  ucn.getText().isEmpty() || phoneNumber.getText().isEmpty()
+				|| email.getText().isEmpty() || address.getText().isEmpty())
+		{
+			infoMessage.append("Please fill all fields.\n");
+			validData = false;
+		}	
+		
+		validData = checkForSpecialCharacters(infoMessage);
+		validData = validateSize(infoMessage);
+		
+		if(validData == false)
+		{
+			infoBox(infoMessage.toString(), null, "Register");
+			return false;
+		}
+						
+		return true;
+	}
+	
+	private boolean checkForSpecialCharacters(StringBuilder infoMessage)
+	{
+		boolean validData = true;		
+		DataValidator oDataValidator = new DataValidator();
+		
+		if(!oDataValidator.validateUserName(username.getText()))
+		{
+			infoMessage.append("Username field contains invalid characters.\n");
+			validData = false;
+		}
+		
+		if(!oDataValidator.validateName(firstName.getText()))
+		{
+			infoMessage.append("First Name field contains invalid characters.\n");
+			validData = false;
+		}
+		
+		if(!oDataValidator.validateName(lastName.getText()))
+		{
+			infoMessage.append("Last Name field contains invalid characters.\n");
+			validData = false;
+		}
+		
+		if(!oDataValidator.validateUCN(ucn.getText()))
+		{
+			infoMessage.append("UCN field contains invalid characters.\n");
+			validData = false;
+		}
+		
+		if(!oDataValidator.validatePhoneNumber(phoneNumber.getText()))
+		{
+			infoMessage.append("Phone Number field contains invalid characters.\n");
+			validData = false;
+		}
+		
+		if(!oDataValidator.validateEmail(email.getText()))
+		{
+			infoMessage.append("Email field contains invalid characters.\n");
+			validData = false;
+		}
+		
+		if(!oDataValidator.validateAddress(address.getText()))
+		{
+			infoMessage.append("Address field contains invalid characters.\n");
+			validData = false;
+		}
+		
+		if(validData == false)
+		{
+			return false;
+		}
+		
+		return true;
+	}
+	
+	private boolean validateSize(StringBuilder infoMessage)
+	{
+		boolean validData = true;
+		DataValidator oDataValidator = new DataValidator();
+		
+		if(!oDataValidator.validateSize(username.getText(), USERNAME_SIZE))
+		{
+			infoMessage.append("Username field is over the max amount of allowed characters: " +USERNAME_SIZE+ ".\n");
+			validData = false;
+		}
+		
+		if(!oDataValidator.validateSize(firstName.getText(), FIRST_NAME_SIZE))
+		{
+			infoMessage.append("First Name field is over the max amount of allowed characters: " +FIRST_NAME_SIZE+ ".\n");
+			validData = false;
+		}
+		
+		if(!oDataValidator.validateSize(lastName.getText(), LAST_NAME_SIZE))
+		{
+			infoMessage.append("Last Name field is over the max amount of allowed characters: " +LAST_NAME_SIZE+ ".\n");
+			validData = false;
+		}
+		
+		if(!oDataValidator.validateSize(ucn.getText(), UCN_SIZE))
+		{
+			infoMessage.append("UCN field is over the max amount of allowed characters: " +UCN_SIZE+ ".\n");
+			validData = false;
+		}
+		
+		if(!oDataValidator.validateSize(phoneNumber.getText(), PHONE_NUMBER_SIZE))
+		{
+			infoMessage.append("Phone Number field is over the max amount of allowed characters: " +PHONE_NUMBER_SIZE+ ".\n");
+			validData = false;
+		}
+		
+		if(!oDataValidator.validateSize(email.getText(), EMAIL_SIZE))
+		{
+			infoMessage.append("Email field is over the max amount of allowed characters: " +EMAIL_SIZE+ ".\n");
+			validData = false;
+		}
+		
+		if(!oDataValidator.validateSize(address.getText(), ADDRESS_SIZE))
+		{
+			infoMessage.append("Address field is over the max amount of allowed characters: " +ADDRESS_SIZE+ ".\n");
+			validData = false;
+		}
+		
+		if(validData == false)
+		{
+			return false;
+		}
+		
+		return true;
+	}
 
 }
