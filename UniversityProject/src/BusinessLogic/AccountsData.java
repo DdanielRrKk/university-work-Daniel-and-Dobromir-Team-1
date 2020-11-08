@@ -25,6 +25,11 @@ public class AccountsData
 		return m_oAccountsDaoImpl.SelectAll();
 	}
 	
+	public List<Accounts> SelectAllOperators() throws SQLException
+	{
+		return m_oAccountsDaoImpl.SelectAllOperators();
+	}
+	
 	public int Insert(Accounts oAccount) throws SQLException
 	{
 		return m_oAccountsDaoImpl.Insert(oAccount);
@@ -40,7 +45,7 @@ public class AccountsData
 		m_oAccountsDaoImpl.UpdateWhereID(ID, oAccount);
 	}
 	
-	public boolean ValidateLogin(String username, String password) throws SQLException
+	public int ValidateLogin(String username, String password) throws SQLException
 	{
 		return m_oAccountsDaoImpl.ValidateLogin(username, password);
 	}
