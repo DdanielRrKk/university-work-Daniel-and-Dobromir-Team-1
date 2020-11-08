@@ -38,6 +38,7 @@ public class AccountsDAOImplementation implements AccountsDAO
 			oAccount.setPassword(rs.getString("PASSWORD"));
 			oAccount.setRoleID(rs.getInt("ROLE_ID"));
 			oAccount.setRatingID(rs.getInt("RATING_ID"));
+			oAccount.setApproved(rs.getBoolean("APPROVED"));
 		}
 		
 		if(check == true)
@@ -67,16 +68,46 @@ public class AccountsDAOImplementation implements AccountsDAO
 			oAccount.setPassword(rs.getString("PASSWORD"));
 			oAccount.setRoleID(rs.getInt("ROLE_ID"));
 			oAccount.setRatingID(rs.getInt("RATING_ID"));
+			oAccount.setApproved(rs.getBoolean("APPROVED"));
+			oAccountsList.add(oAccount);
+		}
+	
+		return oAccountsList;
+	}
+	
+	@Override
+	public List<Accounts> SelectAllOperators() throws SQLException 
+	{
+		List<Accounts> oAccountsList = new ArrayList<Accounts>();
+		PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM ACCOUNTS WHERE ROLE_ID = 2");
+		ResultSet rs = preparedStatement.executeQuery();
+		
+		while(rs.next())
+		{
+			Accounts oAccount = new Accounts();
+			oAccount.setID(rs.getInt("ID"));
+			oAccount.setFirstName(rs.getString("FIRSTNAME"));
+			oAccount.setLastName(rs.getString("LASTNAME"));
+			oAccount.setUCN(rs.getString("UCN"));
+			oAccount.setPhoneNumber(rs.getString("PHONENUMBER"));
+			oAccount.setEmail(rs.getString("EMAIL"));
+			oAccount.setAddress(rs.getString("ADDRESS"));
+			oAccount.setUsername(rs.getString("USERNAME"));
+			oAccount.setPassword(rs.getString("PASSWORD"));
+			oAccount.setRoleID(rs.getInt("ROLE_ID"));
+			oAccount.setRatingID(rs.getInt("RATING_ID"));
+			oAccount.setApproved(rs.getBoolean("APPROVED"));
 			oAccountsList.add(oAccount);
 		}
 	
 		return oAccountsList;
 	}
 
+
 	@Override
 	public int Insert(Accounts oAccount) throws SQLException 
 	{
-		String strQuery = "INSERT INTO ACCOUNTS (FIRSTNAME, LASTNAME, UCN, PHONENUMBER, EMAIL, ADDRESS, USERNAME, PASSWORD, ROLE_ID, RATING_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String strQuery = "INSERT INTO ACCOUNTS (FIRSTNAME, LASTNAME, UCN, PHONENUMBER, EMAIL, ADDRESS, USERNAME, PASSWORD, ROLE_ID, RATING_ID, APPROVED) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement preparedStatement = connection.prepareStatement(strQuery);
 		preparedStatement.setString(1, oAccount.getFirstName());
 		preparedStatement.setString(2, oAccount.getLastName());
@@ -88,6 +119,7 @@ public class AccountsDAOImplementation implements AccountsDAO
 		preparedStatement.setString(8, oAccount.getPassword());
 		preparedStatement.setLong(9, oAccount.getRoleID());
 		preparedStatement.setLong(10, oAccount.getRatingID());
+		preparedStatement.setBoolean(11, oAccount.isApproved());
 		return preparedStatement.executeUpdate();
 	}
 
@@ -103,7 +135,7 @@ public class AccountsDAOImplementation implements AccountsDAO
 	@Override
 	public void UpdateWhereID(int ID, Accounts oAccount) throws SQLException
 	{
-		String strQuery = "UPDATE ACCOUNTS SET FIRSTNAME = ?, SET LASTNAME = ?, SET UCN = ?, SET PHONENUMBER = ?, SET EMAIL = ?, SET ADDRESS = ?, SET USERNAME = ?, SET PASSWORD = ?, SET ROLE_ID, SET RATING_ID = ? WHERE ID = ?";
+		String strQuery = "UPDATE ACCOUNTS SET FIRSTNAME = ?, SET LASTNAME = ?, SET UCN = ?, SET PHONENUMBER = ?, SET EMAIL = ?, SET ADDRESS = ?, SET USERNAME = ?, SET PASSWORD = ?, SET ROLE_ID, SET RATING_ID = ?, SET APPROVED = ? WHERE ID = ?";
 		PreparedStatement preparedStatement = connection.prepareStatement(strQuery);
 		preparedStatement.setString(1, oAccount.getFirstName());
 		preparedStatement.setString(2, oAccount.getLastName());
@@ -115,12 +147,13 @@ public class AccountsDAOImplementation implements AccountsDAO
 		preparedStatement.setString(8, oAccount.getPassword());
 		preparedStatement.setInt(9, oAccount.getRoleID());
 		preparedStatement.setInt(10, oAccount.getRatingID());
-		preparedStatement.setInt(11, ID);
+		preparedStatement.setBoolean(11, oAccount.isApproved());
+		preparedStatement.setInt(12, ID);
 		preparedStatement.executeUpdate();
 	}
 
 	@Override
-	public boolean ValidateLogin(String username, String password) throws SQLException
+	public int ValidateLogin(String username, String password) throws SQLException
 	{
 		
 		PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM ACCOUNTS WHERE username = ? and password = ?");
@@ -131,10 +164,10 @@ public class AccountsDAOImplementation implements AccountsDAO
          
 	    if (resultSet.next()) 
 	    {
-            return true;
+            int ID = resultSet.getInt("ROLE_ID");
+            return ID;
         }
 	
-	    return false;
+	    return 0;
 	}
-
 }

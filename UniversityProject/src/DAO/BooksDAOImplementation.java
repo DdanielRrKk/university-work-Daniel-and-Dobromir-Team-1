@@ -32,7 +32,7 @@ public class BooksDAOImplementation implements BooksDAO
 			oBook.setAuthor(rs.getString("AUTHOR"));
 			oBook.setGenre(rs.getString("GENRE"));
 			oBook.setCondition(rs.getInt("CONDITION_ID"));
-			oBook.setbAvailable(rs.getBoolean("AVALIABLE"));
+			oBook.setAvailable(rs.getBoolean("AVAILABLE"));
 		}
 		
 		if(check == true)
@@ -56,7 +56,7 @@ public class BooksDAOImplementation implements BooksDAO
 			oBook.setAuthor(rs.getString("AUTHOR"));
 			oBook.setGenre(rs.getString("GENRE"));
 			oBook.setCondition(rs.getInt("CONDITION_ID"));
-			oBook.setbAvailable(rs.getBoolean("AVAILABLE"));
+			oBook.setAvailable(rs.getBoolean("AVAILABLE"));
 			oBooksList.add(oBook);
 		}
 	
@@ -72,7 +72,7 @@ public class BooksDAOImplementation implements BooksDAO
 		preparedStatement.setString(2, oBook.getAuthor());
 		preparedStatement.setString(3, oBook.getGenre());
 		preparedStatement.setInt(4, oBook.getCondition());
-		preparedStatement.setBoolean(5, oBook.isbAvailable());
+		preparedStatement.setBoolean(5, oBook.isAvailable());
 		return preparedStatement.executeUpdate();
 	}
 
@@ -93,7 +93,8 @@ public class BooksDAOImplementation implements BooksDAO
 		preparedStatement.setString(2, oBook.getAuthor());
 		preparedStatement.setString(3, oBook.getGenre());
 		preparedStatement.setInt(4, oBook.getCondition());
-		preparedStatement.setBoolean(5, oBook.isbAvailable());
+		preparedStatement.setBoolean(5, oBook.isAvailable());
+		preparedStatement.setInt(6, ID);
 		preparedStatement.executeUpdate();
 	}
 }

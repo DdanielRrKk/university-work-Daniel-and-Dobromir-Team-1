@@ -34,7 +34,8 @@ public class IssueDAOImplementation implements IssueDAO
 			oIssue.setIssueDate(rs.getDate("ISSUE_DATE"));
 			oIssue.setReturnDate(rs.getDate("RETURN_DATE"));
 			oIssue.setReturnedDate(rs.getDate("RETURNED_DATE"));
-			oIssue.setReturnedCondition(rs.getInt("RETURNED_CONDITION"));
+			oIssue.setReturnedCondition(rs.getInt("RETURNED_CONDITION_ID"));
+			oIssue.setApproved(rs.getBoolean("APPROVED"));
 		}
 		
 		if(check == true)
@@ -59,7 +60,8 @@ public class IssueDAOImplementation implements IssueDAO
 			oIssue.setIssueDate(rs.getDate("ISSUE_DATE"));
 			oIssue.setReturnDate(rs.getDate("RETURN_DATE"));
 			oIssue.setReturnedDate(rs.getDate("RETURNED_DATE"));
-			oIssue.setReturnedCondition(rs.getInt("RETURNED_CONDITION"));
+			oIssue.setReturnedCondition(rs.getInt("RETURNED_CONDITION_ID"));
+			oIssue.setApproved(rs.getBoolean("APPROVED"));
 			oIssueList.add(oIssue);
 		}
 	
@@ -69,7 +71,7 @@ public class IssueDAOImplementation implements IssueDAO
 	@Override
 	public int Insert(Issue oIssue) throws SQLException 
 	{
-		String strQuery = "INSERT INTO ISSUE (BOOK_ID, ACCOUNT_ID, ISSUE_DATE, RETURN_DATE, RETURNED_DATE, RETURNED_CONDITION) VALUES (?, ?, ?, ?, ?, ?)";
+		String strQuery = "INSERT INTO ISSUE (BOOK_ID, ACCOUNT_ID, ISSUE_DATE, RETURN_DATE, RETURNED_DATE, RETURNED_CONDITION_ID, APPROVED) VALUES (?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement preparedStatement = connection.prepareStatement(strQuery);
 		preparedStatement.setInt(1, oIssue.getBookID());
 		preparedStatement.setInt(2, oIssue.getAccountID());
@@ -77,6 +79,7 @@ public class IssueDAOImplementation implements IssueDAO
 		preparedStatement.setDate(4, oIssue.getReturnDate());
 		preparedStatement.setDate(5, oIssue.getReturnedDate());
 		preparedStatement.setInt(6, oIssue.getReturnedCondition());
+		preparedStatement.setBoolean(7, oIssue.isApproved());
 		return preparedStatement.executeUpdate();
 	}
 
@@ -91,7 +94,7 @@ public class IssueDAOImplementation implements IssueDAO
 	@Override
 	public void UpdateWhereID(int ID, Issue oIssue) throws SQLException 
 	{
-		String strQuery = "UPDATE ISSUE SET BOOK_ID = ?, SET ACCOUNT_ID = ?, SET ISSUE_DATE = ?, SET RETURN_DATE = ?, SET RETURNED_DATE = ?, SET CONDITION_ID = ? WHERE ID = ?";
+		String strQuery = "UPDATE ISSUE SET BOOK_ID = ?, SET ACCOUNT_ID = ?, SET ISSUE_DATE = ?, SET RETURN_DATE = ?, SET RETURNED_DATE = ?, SET RETURNED_CONDITION_ID = ?, SET APPROVED = ? WHERE ID = ?";
 		PreparedStatement preparedStatement = connection.prepareStatement(strQuery);
 		preparedStatement.setInt(1, oIssue.getBookID());
 		preparedStatement.setInt(2, oIssue.getAccountID());
@@ -99,6 +102,8 @@ public class IssueDAOImplementation implements IssueDAO
 		preparedStatement.setDate(4, oIssue.getReturnDate());
 		preparedStatement.setDate(5, oIssue.getReturnedDate());
 		preparedStatement.setInt(6, oIssue.getReturnedCondition());
+		preparedStatement.setBoolean(7, oIssue.isApproved());
+		preparedStatement.setInt(8, ID);
 		preparedStatement.executeUpdate();
 	}
 
