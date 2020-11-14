@@ -31,14 +31,21 @@ public class OperatorFunctions {
 	 
     private static boolean registerFlag;
     
+    private static boolean stopFlag=false;;
+    
   //=============THREAD
     public void startNotifyThread() {
+    	
+    	stopFlag=false;
     	
     	Task<Void> notify=new Task<Void>() {
 
 			@Override
 			protected Void call() throws Exception {
 				while(true) {
+					if(stopFlag==true) {
+						return null;
+					}
 					if(registerFlag==true) {
 						Platform.runLater(new Runnable() {
 
@@ -48,13 +55,14 @@ public class OperatorFunctions {
 						        tray.setAnimationType(AnimationType.POPUP);
 						        tray.showAndWait();
 							}
-							
+								
 						});
 						return null;
 					}
 					else {
 						Thread.sleep(2000);
 					}
+					
 				}
 			}
 				
@@ -65,9 +73,12 @@ public class OperatorFunctions {
 			@Override
 			public void handle(WorkerStateEvent arg0) {
 				registerFlag=false;
-				Thread thr=new Thread(notify);
-				thr.setDaemon(true);
-				thr.start();
+				
+				if(stopFlag==false) {
+					Thread thr=new Thread(notify);
+					thr.setDaemon(true);
+					thr.start();
+				}
 			}
 				
 		});
@@ -77,11 +88,16 @@ public class OperatorFunctions {
 		th.start();
     }
     
+    //=============STOP THREAD
+    public void stopThread() {
+    	stopFlag=true;
+    }
+    
 	//=============ADD READER REQUEST
 	public void registerRequest(Accounts acc) {
 		registerFlag=true;
 		
-		//....
+		//adi.Insert(acc);
 	}
     
     //========FOR ACCOUNTS
