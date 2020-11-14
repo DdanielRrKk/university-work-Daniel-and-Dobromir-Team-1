@@ -166,7 +166,7 @@ public class operatorMenuController {
         		alert.setGraphic(null);
         		alert.showAndWait();
         		
-        		of.AccountToDB(new Accounts(fName.getText(), lName.getText(), ucn.getText(), phone.getText(), email.getText(), address.getText(), uName.getText(), pass.getText(), 3, 1), 1);
+        		of.AccountToDB(new Accounts(fName.getText(), lName.getText(), ucn.getText(), phone.getText(), email.getText(), address.getText(), uName.getText(), pass.getText(), 3, 1, false), 1);
             } 
         };
         btnReg.setOnAction(ev);
@@ -544,6 +544,7 @@ public class operatorMenuController {
     //=======================================LOGOUT
     @FXML
     void opr_LoggingOut(ActionEvent event) {
+    	of.stopThread();
     	closeOperatorMenuWindow();
     	fxmlScreenLoader fcl=new fxmlScreenLoader();
     	fcl.loadScreen("../Interfaces/logInMenu.fxml");
