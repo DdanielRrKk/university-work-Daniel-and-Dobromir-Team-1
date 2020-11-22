@@ -3,11 +3,15 @@ package Controllers;
 import java.util.Optional;
 
 import BusinessLogic.OperatorFunctions;
+import BusinessLogic.OperatorFunctions.HBoxCell;
 import Model.Accounts;
 import Model.Books;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -20,14 +24,20 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import tray.animations.AnimationType;
+import tray.notification.NotificationType;
+import tray.notification.TrayNotification;
 
 public class operatorMenuController {
 	
@@ -114,7 +124,7 @@ public class operatorMenuController {
         		alert.setGraphic(null);
         		alert.showAndWait();
         		
-        		of.BookToDB(new Books(title.getText(), author.getText(), genre.getText(), list.getSelectionModel().getSelectedIndex(), rb1.isSelected()), 1);
+        		of.BookToDB(new Books(0, title.getText(), author.getText(), genre.getText(), list.getSelectionModel().getSelectedIndex(), rb1.isSelected()), 1);
         		
             } 
         };
@@ -166,7 +176,7 @@ public class operatorMenuController {
         		alert.setGraphic(null);
         		alert.showAndWait();
         		
-        		of.AccountToDB(new Accounts(fName.getText(), lName.getText(), ucn.getText(), phone.getText(), email.getText(), address.getText(), uName.getText(), pass.getText(), 3, 1, false), 1);
+        		of.AccountToDB(new Accounts(0, fName.getText(), lName.getText(), ucn.getText(), phone.getText(), email.getText(), address.getText(), uName.getText(), pass.getText(), 3, 1, true), 1);
             } 
         };
         btnReg.setOnAction(ev);
@@ -226,7 +236,14 @@ public class operatorMenuController {
         		System.out.println(list.getSelectionModel().getSelectedIndex());
         		System.out.println(rb1.isSelected());
         		
-        		of.BookToDB(new Books(title.getText(), author.getText(), genre.getText(), list.getSelectionModel().getSelectedIndex(), rb1.isSelected()), 2);
+        		Books boo=table.getSelectionModel().getSelectedItem();
+        		boo.setTitle(title.getText());
+        		boo.setAuthor(author.getText());
+        		boo.setGenre(genre.getText());
+        		boo.setCondition(list.getSelectionModel().getSelectedIndex());
+        		boo.setAvailable(rb1.isSelected());
+        		
+        		of.BookToDB(boo, 2);
         		
             }
         };
@@ -257,6 +274,9 @@ public class operatorMenuController {
     void editReader(ActionEvent event) {
     	opr_border.setRight(null);
     	
+    	TableView<Accounts> table = of.makeAccountsTable();
+    	table.setMaxWidth(420);
+    	
     	VBox vb=new VBox();
     	
     	addTextFieldToVBox(vb, "First Name");
@@ -286,7 +306,7 @@ public class operatorMenuController {
         		alert.setGraphic(null);
         		alert.showAndWait();
         		
-        		Accounts acc=new Accounts();
+        		Accounts acc=table.getSelectionModel().getSelectedItem();
         		
         		for (Node n : vb.getChildren()) {
         			if(n instanceof TextField) {
@@ -335,9 +355,6 @@ public class operatorMenuController {
     	VBox vb2=new VBox();
     	
     	vb2.getChildren().add(new Label("Edit Reader"));
-        
-    	TableView<Accounts> table = of.makeAccountsTable();
-    	table.setMaxWidth(420);
     	vb2.getChildren().add(table);
     	
     	vb.setAlignment(Pos.CENTER);
@@ -538,7 +555,18 @@ public class operatorMenuController {
     //=======================================NOTIFICATIONS
     @FXML
     void notifications(ActionEvent event) {
+    	opr_border.setRight(null);
     	
+    	ListView<HBoxCell> lv=of.makeNotifications();
+    	
+    	VBox vb=new VBox();
+    	vb.getChildren().add(new Label("Notifications"));
+    	vb.getChildren().add(lv);
+        
+    	vb.setAlignment(Pos.CENTER);
+    	vb.setSpacing(5);
+    	
+        opr_border.setCenter(vb);
     }
     
     //=======================================LOGOUT
