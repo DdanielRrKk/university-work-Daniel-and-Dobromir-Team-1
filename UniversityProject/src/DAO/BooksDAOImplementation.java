@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class BooksDAOImplementation implements BooksDAO
 		{
 			check = true;
 			oBook.setID(rs.getInt("ID"));
+			oBook.setUpdateCounter(rs.getInt("UPDATE_COUNTER"));
 			oBook.setTitle(rs.getString("TITLE"));
 			oBook.setAuthor(rs.getString("AUTHOR"));
 			oBook.setGenre(rs.getString("GENRE"));
@@ -52,6 +54,7 @@ public class BooksDAOImplementation implements BooksDAO
 		{
 			Books oBook = new Books();
 			oBook.setID(rs.getInt("ID"));
+			oBook.setUpdateCounter(rs.getInt("UPDATE_COUNTER"));
 			oBook.setTitle(rs.getString("TITLE"));
 			oBook.setAuthor(rs.getString("AUTHOR"));
 			oBook.setGenre(rs.getString("GENRE"));
@@ -64,16 +67,29 @@ public class BooksDAOImplementation implements BooksDAO
 	}
 
 	@Override
-	public int Insert(Books oBook) throws SQLException 
+	public boolean Insert(Books oBook) throws SQLException 
 	{
-		String strQuery = "INSERT INTO BOOKS (TITLE, AUTHOR, GENRE, CONDITION_ID, AVAILABLE) VALUES (?, ?, ?, ?, ?)";
-		PreparedStatement preparedStatement = connection.prepareStatement(strQuery);
-		preparedStatement.setString(1, oBook.getTitle());
-		preparedStatement.setString(2, oBook.getAuthor());
-		preparedStatement.setString(3, oBook.getGenre());
-		preparedStatement.setInt(4, oBook.getCondition());
-		preparedStatement.setBoolean(5, oBook.isAvailable());
-		return preparedStatement.executeUpdate();
+		String strQuery = "INSERT INTO BOOKS (UPDATE_COUNTER, TITLE, AUTHOR, GENRE, CONDITION_ID, AVAILABLE) VALUES (?, ?, ?, ?, ?, ?)";
+		PreparedStatement preparedStatement = connection.prepareStatement(strQuery, Statement.RETURN_GENERATED_KEYS);
+		preparedStatement.setInt(1, oBook.getUpdateCounter());
+		preparedStatement.setString(2, oBook.getTitle());
+		preparedStatement.setString(3, oBook.getAuthor());
+		preparedStatement.setString(4, oBook.getGenre());
+		preparedStatement.setInt(5, oBook.getCondition());
+		preparedStatement.setBoolean(6, oBook.isAvailable());
+		
+		if (preparedStatement.executeUpdate() == 0)
+		{
+			return false;
+		}
+		
+		ResultSet rs = preparedStatement.getGeneratedKeys();
+        if (rs.next()) 
+        {
+        	oBook.setID(rs.getInt(1));
+        }
+        
+		return true;
 	}
 
 	@Override
@@ -87,14 +103,31 @@ public class BooksDAOImplementation implements BooksDAO
 	@Override
 	public void UpdateWhereID(int ID, Books oBook) throws SQLException 
 	{
-		String strQuery = "UPDATE BOOKS SET TITLE = ?, SET AUTHOR = ?, SET GENRE = ?, SET CONDITION_ID = ?, SET AVAILABLE = ? WHERE ID = ?";
-		PreparedStatement preparedStatement = connection.prepareStatement(strQuery);
-		preparedStatement.setString(1, oBook.getTitle());
-		preparedStatement.setString(2, oBook.getAuthor());
-		preparedStatement.setString(3, oBook.getGenre());
-		preparedStatement.setInt(4, oBook.getCondition());
-		preparedStatement.setBoolean(5, oBook.isAvailable());
-		preparedStatement.setInt(6, ID);
-		preparedStatement.executeUpdate();
+		connection.setAutoCommit(false);
+		String strQuery = "SELECT UPDATE_COUNTER, TITLE, AUTHOR, GENRE, CONDITION_ID, AVAILABLE FROM BOOKS WITH (UPDLOCK) WHERE ID = " + ID;	
+		Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+		ResultSet rs = statement.executeQuery(strQuery);
+		
+		if(rs.next())
+		{			
+			if(oBook.getUpdateCounter() != rs.getInt("UPDATE_COUNTER"))
+			{
+				connection.rollback();
+				connection.setAutoCommit(true);
+				return;
+			}
+			
+			oBook.setUpdateCounter(rs.getInt("UPDATE_COUNTER")+1);
+			rs.updateInt("UPDATE_COUNTER", oBook.getUpdateCounter());
+			rs.updateString("TITLE", oBook.getTitle());
+			rs.updateString("AUTHOR", oBook.getAuthor());
+			rs.updateString("GENRE", oBook.getGenre());
+			rs.updateInt("CONDITION_ID", oBook.getCondition());
+			rs.updateBoolean("AVAILABLE", oBook.isAvailable());
+			rs.updateRow();		
+			
+		}
+		connection.commit();
+		connection.setAutoCommit(true);
 	}
 }

@@ -9,7 +9,8 @@ public interface IssueDAO
 {
 	public Issue SelectWhereID(int ID) throws SQLException;
 	public List<Issue> SelectAll() throws SQLException;
-	public int Insert(Issue oIssue) throws SQLException;
+	public boolean Insert(Issue oIssue) throws SQLException;
 	public int DeleteWhereID(int ID) throws SQLException;
 	public void UpdateWhereID(int ID, Issue oIssue) throws SQLException;
+	public List<Issue> SelectAllWhereAccountID(int ID) throws SQLException;
 }
