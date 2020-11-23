@@ -5,6 +5,7 @@ import java.sql.Date;
 public class Issue 
 {
 	private int ID;
+	private int UpdateCounter;
 	private int BookID;
 	private int AccountID;
 	private Date IssueDate;
@@ -17,8 +18,9 @@ public class Issue
 	{
 	}
 	
-	public Issue(int bookID, int accountID, Date issueDate, Date returnDate, Date returnedDate, int returnedCondition, boolean approvedIssue) 
+	public Issue(int updateCounter, int bookID, int accountID, Date issueDate, Date returnDate, Date returnedDate, int returnedCondition, boolean approvedIssue) 
 	{
+		UpdateCounter = updateCounter;
 		BookID = bookID;
 		AccountID = accountID;
 		IssueDate = issueDate;
@@ -28,9 +30,10 @@ public class Issue
 		Approved = approvedIssue;
 	}
 
-	public Issue(int iD, int bookID, int accountID, Date issueDate, Date returnDate, Date returnedDate, int returnedCondition, boolean approvedIssue) 
+	public Issue(int iD, int updateCounter, int bookID, int accountID, Date issueDate, Date returnDate, Date returnedDate, int returnedCondition, boolean approvedIssue) 
 	{
 		ID = iD;
+		UpdateCounter = updateCounter;
 		BookID = bookID;
 		AccountID = accountID;
 		IssueDate = issueDate;
@@ -46,6 +49,16 @@ public class Issue
 
 	public void setID(int iD) {
 		ID = iD;
+	}
+	
+	public int getUpdateCounter()
+	{
+		return UpdateCounter;
+	}
+	
+	public void setUpdateCounter(int updateCounter)
+	{
+		this.UpdateCounter = updateCounter;
 	}
 
 	public int getBookID() {

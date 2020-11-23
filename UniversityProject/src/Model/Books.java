@@ -3,6 +3,7 @@ package Model;
 public class Books {
 	
 	private int ID;
+	private int UpdateCounter;
 	private String Title;
 	private String Author;
 	private String Genre;
@@ -13,8 +14,9 @@ public class Books {
 	{
 	}
 	
-	public Books(String title, String author, String genre, int condition, boolean avaliable)
+	public Books(int updateCounter, String title, String author, String genre, int condition, boolean avaliable)
 	{
+		this.UpdateCounter = updateCounter;
 		this.Title = title;
 		this.Author = author;
 		this.Genre = genre;
@@ -22,9 +24,10 @@ public class Books {
 		this.Available = avaliable;
 	}
 	
-	public Books(int id, String title, String author, String genre, int condition, boolean avaliable)
-	{
+	public Books(int id, int updateCounter, String title, String author, String genre, int condition, boolean avaliable)
+	{		
 		this.ID = id;
+		this.UpdateCounter = updateCounter;
 		this.Title = title;
 		this.Author = author;
 		this.Genre = genre;
@@ -38,6 +41,16 @@ public class Books {
 
 	public void setID(int ID) {
 		this.ID = ID;
+	}
+	
+	public int getUpdateCounter()
+	{
+		return UpdateCounter;
+	}
+	
+	public void setUpdateCounter(int updateCounter)
+	{
+		this.UpdateCounter = updateCounter;
 	}
 
 	public String getTitle() {

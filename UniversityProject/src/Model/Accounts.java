@@ -3,6 +3,7 @@ package Model;
 public class Accounts 
 {
 	private int ID;
+	private int UpdateCounter;
 	private String FirstName;
 	private String LastName;
 	private String UCN;
@@ -18,8 +19,9 @@ public class Accounts
 	{
 	}
 	
-	public Accounts(String firstName, String lastName, String uCN, String phoneNumber, String email, String address, String username, String password, int roleID, int ratingID, boolean approvedAccount) 
+	public Accounts(int updateCounter, String firstName, String lastName, String uCN, String phoneNumber, String email, String address, String username, String password, int roleID, int ratingID, boolean approvedAccount) 
 	{
+		this.UpdateCounter = updateCounter;
 		this.FirstName = firstName;
 		this.LastName = lastName;
 		this.UCN = uCN;
@@ -33,9 +35,10 @@ public class Accounts
 		this.Approved = approvedAccount;
 	}
 	
-	public Accounts(int iD, String firstName, String lastName, String uCN, String phoneNumber, String email, String address, String username, String password, int roleID, int ratingID, boolean approvedAccount) 
+	public Accounts(int iD, int updateCounter, String firstName, String lastName, String uCN, String phoneNumber, String email, String address, String username, String password, int roleID, int ratingID, boolean approvedAccount) 
 	{
 		this.ID = iD;
+		this.UpdateCounter = updateCounter;
 		this.FirstName = firstName;
 		this.LastName = lastName;
 		this.UCN = uCN;
@@ -55,6 +58,16 @@ public class Accounts
 	
 	public void setID(int ID) {
 		this.ID = ID;
+	}
+	
+	public int getUpdateCounter()
+	{
+		return UpdateCounter;
+	}
+	
+	public void setUpdateCounter(int updateCounter)
+	{
+		this.UpdateCounter = updateCounter;
 	}
 
 	public String getFirstName() {
