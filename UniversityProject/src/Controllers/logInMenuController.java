@@ -2,7 +2,6 @@ package Controllers;
 
 import java.sql.SQLException;
 
-import BusinessLogic.OperatorFunctions;
 import DAO.AccountsDAOImplementation;
 import Interfaces.Main;
 import javafx.event.ActionEvent;
@@ -31,9 +30,6 @@ public class logInMenuController {
     
     @FXML
     private Button li_BackBtn;
-    
-    fxmlScreenLoader fcl = new fxmlScreenLoader();
-    OperatorFunctions of=new OperatorFunctions();
 
     @FXML
     void li_loggingIn(ActionEvent event) throws SQLException 
@@ -62,31 +58,25 @@ public class logInMenuController {
 	    }
         if(accdao.ValidateLogin(username, password) == 1) 
         {   	
-        	closeLogInWindow();
         	Main.getInstance().setID(accdao.GetUserID(username, password));
-        	fcl.loadScreen("../Interfaces/adminMenu.fxml");       	
+        	Main.getInstance().setScene("../Interfaces/adminMenu.fxml");       	
 	    }
         else if(accdao.ValidateLogin(username, password) == 2)
         {
-        	closeLogInWindow();
-        	of.startNotifyThread();
         	Main.getInstance().setID(accdao.GetUserID(username, password));
-        	fcl.loadScreen("../Interfaces/operatorMenu.fxml");       	
+        	Main.getInstance().setScene("../Interfaces/operatorMenu.fxml");       	
         }
         else if(accdao.ValidateLogin(username, password) == 3) 
         {
-        	closeLogInWindow();
         	Main.getInstance().setID(accdao.GetUserID(username, password));
-        	fcl.loadScreen("../Interfaces/readerMenu.fxml");       	
+        	Main.getInstance().setScene("../Interfaces/readerMenu.fxml");       	
         }
     }    	
     
     @FXML
     void li_backToStartManu(ActionEvent event) 
     {
-    	closeLogInWindow();
-    	fxmlScreenLoader fcl = new fxmlScreenLoader();
-    	fcl.loadScreen("../Interfaces/startMenu.fxml");
+    	Main.getInstance().setScene("../Interfaces/startMenu.fxml");
     }
     
     private void infoBox(String infoMessage, String headerText, String title) 
@@ -97,10 +87,4 @@ public class logInMenuController {
         alert.setHeaderText(headerText);
         alert.showAndWait();
     }
-    
-    private void closeLogInWindow() 
-    {
-    	((Stage)li_userText.getScene().getWindow()).close();
-	}
-
 }

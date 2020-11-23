@@ -62,24 +62,15 @@ public class adminMenuController implements Initializable
 
     @FXML private MenuItem menuItemRemoveOperator;
     
-    private TextField username = new TextField(); 
+    private TextFieldLimited username = new TextFieldLimited(32); 
     private PasswordField password = new PasswordField();
-    private TextField firstName = new TextField();
-    private TextField lastName = new TextField();
-    private TextField ucn = new TextField();
-    private TextField phoneNumber = new TextField();
-    private TextField email = new TextField();
-    private TextField address = new TextField();
+    private TextFieldLimited firstName = new TextFieldLimited(32);
+    private TextFieldLimited lastName = new TextFieldLimited(32);
+    private TextFieldLimited ucn = new TextFieldLimited(16);
+    private TextFieldLimited phoneNumber = new TextFieldLimited(16);
+    private TextFieldLimited email = new TextFieldLimited(32);
+    private TextFieldLimited address = new TextFieldLimited(512);
     private Button btnRegister = new Button();
-    
-    private static final int USERNAME_SIZE = 32;
-    private static final int PASSWORD_SIZE = 32;
-    private static final int FIRST_NAME_SIZE = 32;
-    private static final int LAST_NAME_SIZE = 32;
-    private static final int UCN_SIZE = 16;
-    private static final int PHONE_NUMBER_SIZE = 16;
-    private static final int EMAIL_SIZE = 32;
-    private static final int ADDRESS_SIZE = 512; 
     
     @FXML
     void addOperator(ActionEvent event) 
@@ -115,6 +106,10 @@ public class adminMenuController implements Initializable
     void removeOperator(ActionEvent event) 
     {
     	Accounts oAccount = operatorsTable.getSelectionModel().getSelectedItem();
+    	if(oAccount == null)
+    	{
+    		return;
+    	}
     	AccountsData oAccountData = new AccountsData();
     	try 
     	{
@@ -247,7 +242,6 @@ public class adminMenuController implements Initializable
 		}	
 		
 		validData = checkForSpecialCharacters(infoMessage);
-		validData = validateSize(infoMessage);
 		
 		if(validData == false)
 		{
@@ -313,59 +307,5 @@ public class adminMenuController implements Initializable
 		return true;
 	}
 	
-	private boolean validateSize(StringBuilder infoMessage)
-	{
-		boolean validData = true;
-		DataValidator oDataValidator = new DataValidator();
-		
-		if(!oDataValidator.validateSize(username.getText(), USERNAME_SIZE))
-		{
-			infoMessage.append("Username field is over the max amount of allowed characters: " +USERNAME_SIZE+ ".\n");
-			validData = false;
-		}
-		
-		if(!oDataValidator.validateSize(firstName.getText(), FIRST_NAME_SIZE))
-		{
-			infoMessage.append("First Name field is over the max amount of allowed characters: " +FIRST_NAME_SIZE+ ".\n");
-			validData = false;
-		}
-		
-		if(!oDataValidator.validateSize(lastName.getText(), LAST_NAME_SIZE))
-		{
-			infoMessage.append("Last Name field is over the max amount of allowed characters: " +LAST_NAME_SIZE+ ".\n");
-			validData = false;
-		}
-		
-		if(!oDataValidator.validateSize(ucn.getText(), UCN_SIZE))
-		{
-			infoMessage.append("UCN field is over the max amount of allowed characters: " +UCN_SIZE+ ".\n");
-			validData = false;
-		}
-		
-		if(!oDataValidator.validateSize(phoneNumber.getText(), PHONE_NUMBER_SIZE))
-		{
-			infoMessage.append("Phone Number field is over the max amount of allowed characters: " +PHONE_NUMBER_SIZE+ ".\n");
-			validData = false;
-		}
-		
-		if(!oDataValidator.validateSize(email.getText(), EMAIL_SIZE))
-		{
-			infoMessage.append("Email field is over the max amount of allowed characters: " +EMAIL_SIZE+ ".\n");
-			validData = false;
-		}
-		
-		if(!oDataValidator.validateSize(address.getText(), ADDRESS_SIZE))
-		{
-			infoMessage.append("Address field is over the max amount of allowed characters: " +ADDRESS_SIZE+ ".\n");
-			validData = false;
-		}
-		
-		if(validData == false)
-		{
-			return false;
-		}
-		
-		return true;
-	}
 
 }
