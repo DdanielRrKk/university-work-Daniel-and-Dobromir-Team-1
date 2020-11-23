@@ -25,7 +25,7 @@ public class IssueData
 		return m_oIssueDaoImpl.SelectAll();
 	}
 	
-	public int Insert(Issue oIssue) throws SQLException
+	public boolean Insert(Issue oIssue) throws SQLException
 	{
 		return m_oIssueDaoImpl.Insert(oIssue);
 	}
@@ -38,5 +38,10 @@ public class IssueData
 	public void UpdateWhereID(int ID, Issue oIssue) throws SQLException
 	{
 		m_oIssueDaoImpl.UpdateWhereID(ID, oIssue);
+	}
+	
+	public List<Issue> SelectAllWhereAccountID(int ID) throws SQLException
+	{
+		return m_oIssueDaoImpl.SelectAllWhereAccountID(ID);
 	}
 }

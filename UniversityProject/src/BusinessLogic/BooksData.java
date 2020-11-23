@@ -25,7 +25,7 @@ public class BooksData
 		return m_oBooksDaoImpl.SelectAll();
 	}
 	
-	public int Insert(Books oBook) throws SQLException
+	public boolean Insert(Books oBook) throws SQLException
 	{
 		return m_oBooksDaoImpl.Insert(oBook);
 	}

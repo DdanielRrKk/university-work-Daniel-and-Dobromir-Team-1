@@ -30,7 +30,7 @@ public class AccountsData
 		return m_oAccountsDaoImpl.SelectAllOperators();
 	}
 	
-	public int Insert(Accounts oAccount) throws SQLException
+	public boolean Insert(Accounts oAccount) throws SQLException
 	{
 		return m_oAccountsDaoImpl.Insert(oAccount);
 	}
