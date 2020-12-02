@@ -328,7 +328,7 @@ public class OperatorFunctions {
      	    				
      	    				Accounts acc=a;
          	    			
-         	    			adi.UpdateWhereID(acc.getID(), acc);
+         	    			adi.DeleteWhereID(acc.getID());
      	    			}
      	    		}
      	    	}
@@ -594,14 +594,17 @@ public class OperatorFunctions {
     }
     
     //========GET SELECTED ACCOUNTS TABLE
-    public void getSelectedRowAccounts(TableView<Accounts> tb, VBox vb) {
+    public void getSelectedRowAccounts(TableView<Accounts> tb, VBox vb, ListView<String> li) {
     	
     	tb.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 			@Override
 			public void handle(MouseEvent arg0) {
 				Accounts acc=(Accounts) tb.getSelectionModel().getSelectedItem();
-            		
+            	
+				li.scrollTo(acc.getRatingID()-1);
+			    li.getSelectionModel().select(acc.getRatingID()-1);
+				
            		for (Node n : vb.getChildren()) {
            			if(n instanceof TextField) {
 						TextField tf=(TextField)n;
@@ -641,52 +644,8 @@ public class OperatorFunctions {
 			public void handle(MouseEvent arg0) {
 				Books boo=(Books) tb.getSelectionModel().getSelectedItem();
            		
-           		switch(boo.getCondition()) {
-    	           	case 0:
-    	           		li.scrollTo(0);
-					    li.getSelectionModel().select(0);
-    	           		break;
-    	           			
-    	           	case 1:
-    	           		li.scrollTo(1);
-					    li.getSelectionModel().select(1);
-    	           		break;
-    	           			
-    	           	case 2:
-    	           		li.scrollTo(2);
-					    li.getSelectionModel().select(2);
-    	           		break;
-    	           			
-    	           	case 3:
-    	           		li.scrollTo(3);
-					    li.getSelectionModel().select(3);
-    	           		break;
-    	           			
-    	           	case 4:
-    	           		li.scrollTo(4);
-					    li.getSelectionModel().select(4);
-    	           		break;
-    	           			
-    	           	case 5:
-    	           		li.scrollTo(5);
-					    li.getSelectionModel().select(5);
-    	           		break;
-    	           			
-    	           	case 6:
-    	           		li.scrollTo(6);
-						li.getSelectionModel().select(6);
-						break;
-    	           			
-    	           	case 7:
-    	           		li.scrollTo(7);
-					    li.getSelectionModel().select(7);
-					    break;
-    	           			
-    	     		case 8:
-    	       			li.scrollTo(8);
-					    li.getSelectionModel().select(8);
-    	       			break;
-    	   		}
+				li.scrollTo(boo.getCondition());
+			    li.getSelectionModel().select(boo.getCondition());
                
            		for (Node n : vb.getChildren()) {
            			if(n instanceof TextField) {
@@ -741,12 +700,7 @@ public class OperatorFunctions {
 			
 		case 2:
 			try {
-				List<Accounts> li=adi.SelectAll();
-				for (Accounts a : li) {
-					if(acc.getUCN().equals(a.getUCN())) {
-						adi.UpdateWhereID(a.getID(), acc);
-					}
-				}
+				adi.UpdateWhereID(acc.getID(), acc);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -768,12 +722,7 @@ public class OperatorFunctions {
 			
 		case 2:
 			try {
-				List<Books> li=bdi.SelectAll();
-				for (Books b : li) {
-					if(boo.getTitle().equals(b.getTitle())) {
-						bdi.UpdateWhereID(b.getID(), boo);
-					}
-				}
+				bdi.UpdateWhereID(boo.getID(), boo);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -788,12 +737,7 @@ public class OperatorFunctions {
     	acc=(Accounts) table.getSelectionModel().getSelectedItem();
     	
     	try {
-    		List<Accounts> li=adi.SelectAll();
-    		for (int i = 0; i < li.size(); i++) {
-    			if(acc.getUCN().equals(li.get(i).getUCN())) {
-    				adi.DeleteWhereID((int)li.get(i).getID());
-    			}
-    		}
+    		adi.DeleteWhereID(acc.getID());
     	} catch (SQLException e) {
     		e.printStackTrace();
     	}
@@ -805,12 +749,7 @@ public class OperatorFunctions {
 		boo=(Books) table.getSelectionModel().getSelectedItem();
 		
 		try {
-			List<Books> li=bdi.SelectAll();
-			for (int i = 0; i < li.size(); i++) {
-				if(boo.getTitle().equals(li.get(i).getTitle())) {
-					bdi.DeleteWhereID(li.get(i).getID());
-				}
-			}
+			bdi.DeleteWhereID(boo.getID());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
