@@ -12,57 +12,57 @@
          <left>
             <VBox prefHeight="400.0" prefWidth="130.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button fx:id="opr_addReaderBtn" mnemonicParsing="false" onAction="#addReader" text="Add Reader">
+                  <Button fx:id="opr_addReaderBtn" mnemonicParsing="false" onAction="#addReader" prefHeight="25.0" prefWidth="146.0" text="Add Reader">
                      <VBox.margin>
                         <Insets left="10.0" right="10.0" top="5.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="opr_addBookBtn" mnemonicParsing="false" onAction="#addBook" text="Add Book">
+                  <Button fx:id="opr_addBookBtn" mnemonicParsing="false" onAction="#addBook" prefHeight="25.0" prefWidth="116.0" text="Add Book">
                      <VBox.margin>
                         <Insets left="10.0" right="10.0" top="5.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="opr_editReaderBtn" mnemonicParsing="false" onAction="#editReader" text="Edit Reader">
+                  <Button fx:id="opr_editReaderBtn" mnemonicParsing="false" onAction="#editReader" prefHeight="25.0" prefWidth="114.0" text="Edit Reader">
                      <VBox.margin>
                         <Insets left="10.0" right="10.0" top="5.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="opr_editBookBtn" mnemonicParsing="false" onAction="#editBook" text="Edit Book">
+                  <Button fx:id="opr_editBookBtn" mnemonicParsing="false" onAction="#editBook" prefHeight="25.0" prefWidth="116.0" text="Edit Book">
                      <VBox.margin>
                         <Insets left="10.0" right="10.0" top="5.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="opr_removeReaderBtn" mnemonicParsing="false" onAction="#removeReader" text="Remove Reader">
+                  <Button fx:id="opr_removeReaderBtn" mnemonicParsing="false" onAction="#removeReader" prefHeight="25.0" prefWidth="115.0" text="Remove Reader">
                      <VBox.margin>
                         <Insets left="10.0" right="10.0" top="5.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="opr_removeBookBtn" mnemonicParsing="false" onAction="#removeBook" text="Remove Book">
+                  <Button fx:id="opr_removeBookBtn" mnemonicParsing="false" onAction="#removeBook" prefHeight="25.0" prefWidth="119.0" text="Remove Book">
                      <VBox.margin>
                         <Insets left="10.0" right="10.0" top="5.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="opr_showAllReadersBtn" mnemonicParsing="false" onAction="#showAllReaders" text="Show All Readers">
+                  <Button fx:id="opr_showAllReadersBtn" mnemonicParsing="false" onAction="#showAllReaders" prefHeight="25.0" prefWidth="116.0" text="Show All Readers">
                      <VBox.margin>
                         <Insets left="10.0" right="10.0" top="5.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="opr_showAllBooksBtn" mnemonicParsing="false" onAction="#showAllBooks" text="Show All Books">
+                  <Button fx:id="opr_showAllBooksBtn" mnemonicParsing="false" onAction="#showAllBooks" prefHeight="25.0" prefWidth="119.0" text="Show All Books">
                      <VBox.margin>
                         <Insets left="10.0" right="10.0" top="5.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="opr_searchReaderBtn" mnemonicParsing="false" onAction="#searchReader" text="Search Reader">
+                  <Button fx:id="opr_searchReaderBtn" mnemonicParsing="false" onAction="#searchReader" prefHeight="25.0" prefWidth="121.0" text="Search Reader">
                      <VBox.margin>
                         <Insets left="10.0" right="10.0" top="5.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="opr_searchBookBtn" mnemonicParsing="false" onAction="#searchBook" text="Search Book">
+                  <Button fx:id="opr_searchBookBtn" mnemonicParsing="false" onAction="#searchBook" prefHeight="25.0" prefWidth="116.0" text="Search Book">
                      <VBox.margin>
                         <Insets left="10.0" right="10.0" top="5.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="opr_notificationsBtn" mnemonicParsing="false" onAction="#notifications" text="Notifications">
+                  <Button fx:id="opr_notificationsBtn" mnemonicParsing="false" onAction="#notifications" prefHeight="25.0" prefWidth="130.0" text="Notifications">
                      <VBox.margin>
                         <Insets left="10.0" right="10.0" top="5.0" />
                      </VBox.margin>
