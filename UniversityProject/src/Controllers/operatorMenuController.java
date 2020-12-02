@@ -1,11 +1,15 @@
 package Controllers;
 
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 import BusinessLogic.OperatorFunctions;
 import BusinessLogic.OperatorFunctions.HBoxCell;
+import DAO.IssueDAOImplementation;
 import Model.Accounts;
 import Model.Books;
+import Model.Issue;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,6 +19,7 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -24,6 +29,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -233,14 +239,11 @@ public class operatorMenuController {
         		alert.setGraphic(null);
         		alert.showAndWait();
         		
-        		System.out.println(list.getSelectionModel().getSelectedIndex());
-        		System.out.println(rb1.isSelected());
-        		
         		Books boo=table.getSelectionModel().getSelectedItem();
         		boo.setTitle(title.getText());
         		boo.setAuthor(author.getText());
         		boo.setGenre(genre.getText());
-        		boo.setCondition(list.getSelectionModel().getSelectedIndex());
+        		boo.setCondition(list.getSelectionModel().getSelectedIndex()+1);
         		boo.setAvailable(rb1.isSelected());
         		
         		of.BookToDB(boo, 2);
@@ -263,7 +266,6 @@ public class operatorMenuController {
     	
     	opr_border.setCenter(vb);
     	opr_border.setRight(vb2);
-    	
     	   		
     	of.getSelectedRowBooks(table, vb, list);
     	
@@ -279,21 +281,29 @@ public class operatorMenuController {
     	
     	VBox vb=new VBox();
     	
-    	addTextFieldToVBox(vb, "First Name");
-    	addTextFieldToVBox(vb, "Last Name");
-    	addTextFieldToVBox(vb, "UCN");
-    	addTextFieldToVBox(vb, "Phone Number");
-    	addTextFieldToVBox(vb, "Email");
-    	addTextFieldToVBox(vb, "Address");
+    	TextField fname = new TextField();fname.setPromptText("First Name");
+    	TextField lname = new TextField();lname.setPromptText("Last Name");
+    	TextField ucn = new TextField();ucn.setPromptText("UCN");
+    	TextField phone = new TextField();phone.setPromptText("Phone Number");
+    	TextField email = new TextField();email.setPromptText("Email");
+    	TextField address = new TextField();address.setPromptText("Address");
     	
-    	vb.getChildren().add(new Label("Readers Books"));
+    	vb.getChildren().add(fname);
+        vb.getChildren().add(lname);
+        vb.getChildren().add(ucn);
+        vb.getChildren().add(phone);
+        vb.getChildren().add(email);
+        vb.getChildren().add(address);
     	
-    	// book titles 
-    	ObservableList<String> listRows2 = FXCollections.<String>observableArrayList();
-    	ListView<String> list2 = new ListView<>(listRows2);
-    	list2.setOrientation(Orientation.VERTICAL);
-    	list2.setMaxHeight(50);
-    	vb.getChildren().add(list2);
+    	ListView<String> lv=new ListView();
+    	ObservableList<String> l=FXCollections.observableArrayList ("1","2","3","4","5");
+        lv.setItems(l);
+    	lv.setOrientation(Orientation.HORIZONTAL);
+    	lv.setMaxHeight(30);
+    	lv.setMaxWidth(124);
+    	
+    	vb.getChildren().add(new Label("Rating"));
+    	vb.getChildren().add(lv);
     	
     	Button btn1=new Button();
     	btn1.setText("Save");
@@ -307,43 +317,13 @@ public class operatorMenuController {
         		alert.showAndWait();
         		
         		Accounts acc=table.getSelectionModel().getSelectedItem();
-        		
-        		for (Node n : vb.getChildren()) {
-        			if(n instanceof TextField) {
-        				try {
-        					TextField tf=(TextField)n;
-        					if(tf.getPromptText().equals("Username")) {
-        						acc.setUsername(tf.getText());
-        					}
-        					if(tf.getPromptText().equals("Password")) {
-        						acc.setPassword(tf.getText());
-        					}
-        					if(tf.getPromptText().equals("First Name")) {
-        						acc.setFirstName(tf.getText());
-        					}
-        					if(tf.getPromptText().equals("Last Name")) {
-        						acc.setLastName(tf.getText());
-        					}
-        					if(tf.getPromptText().equals("UCN")) {
-        						acc.setUCN(tf.getText());
-        					}
-        					if(tf.getPromptText().equals("Phone Number")) {
-        						acc.setPhoneNumber(tf.getText());
-        					}
-        					if(tf.getPromptText().equals("Email")) {
-        						acc.setEmail(tf.getText());
-        					}
-        					if(tf.getPromptText().equals("Address")) {
-        						acc.setAddress(tf.getText());
-        					}
-        				}
-        				catch(Exception ex) {
-        					break;
-        				}
-        			}
-        			acc.setRatingID(1);
-        			acc.setRoleID(3);
-            	}
+        		acc.setFirstName(fname.getText());
+        		acc.setLastName(lname.getText());
+        		acc.setUCN(ucn.getText());
+        		acc.setPhoneNumber(phone.getText());
+        		acc.setEmail(email.getText());
+        		acc.setAddress(address.getText());
+        		acc.setRatingID(lv.getSelectionModel().getSelectedIndex()+1);
         		
         		of.AccountToDB(acc, 2);
             }
@@ -359,13 +339,15 @@ public class operatorMenuController {
     	
     	vb.setAlignment(Pos.CENTER);
     	vb2.setAlignment(Pos.CENTER);
+    	
     	vb.setSpacing(5);
+    	vb2.setSpacing(5);
     	
     	opr_border.setCenter(vb);
     	opr_border.setRight(vb2);
     	
     	//====fill the textFields
-    	of.getSelectedRowAccounts(table, vb);
+    	of.getSelectedRowAccounts(table, vb, lv);
     }
     
     //=======================================REMOVE BOOK
