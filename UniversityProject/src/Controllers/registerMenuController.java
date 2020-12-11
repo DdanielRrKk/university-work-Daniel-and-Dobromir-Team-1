@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import BusinessLogic.OperatorFunctions;
 import DAO.AccountsDAOImplementation;
+import Interfaces.Main;
 import Model.Accounts;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,7 +16,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
-import javafx.stage.Stage;
 import javafx.util.Pair;
 
 public class registerMenuController {
@@ -235,13 +234,6 @@ public class registerMenuController {
     
     @FXML
     void reg_backToStartManu(ActionEvent event) {
-    	closeRegisterWindow();
-    	fxmlScreenLoader fcl=new fxmlScreenLoader();
-    	fcl.loadScreen("../Interfaces/startMenu.fxml");
+    	Main.getInstance().setScene("../Interfaces/startMenu.fxml");
     }
-    
-    private void closeRegisterWindow() {
-    	((Stage)reg_backBtn.getScene().getWindow()).close();
-    }
-
 }
