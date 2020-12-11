@@ -16,15 +16,19 @@
          <left>
             <VBox alignment="CENTER" prefHeight="400.0" prefWidth="137.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button fx:id="rd_books" mnemonicParsing="false" prefHeight="32.0" prefWidth="126.0" text="Books">
+                  <Button fx:id="rd_books" mnemonicParsing="false" onAction="#onBooks" prefHeight="32.0" prefWidth="126.0" text="Books">
                      <VBox.margin>
                         <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
                      </VBox.margin></Button>
-                  <Button fx:id="rd_borrowBook" mnemonicParsing="false" prefHeight="32.0" prefWidth="126.0" text="Borrowed books">
+                  <Button fx:id="rd_borrowBook" mnemonicParsing="false" onAction="#onBorrowedBooks" prefHeight="32.0" prefWidth="126.0" text="Borrowed books">
                      <VBox.margin>
                         <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
                      </VBox.margin>
                   </Button>
+                  <Button fx:id="rd_Information" mnemonicParsing="false" onAction="#onInformation" prefHeight="32.0" prefWidth="126.0" text="Information">
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+                     </VBox.margin></Button>
                   <Button fx:id="rd_logOutBtn" mnemonicParsing="false" onAction="#rd_LoggingOut" prefHeight="10.0" prefWidth="74.0" text="Log out">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="240.0" />
@@ -44,7 +48,7 @@
                   <TableColumn fx:id="availableColumn" prefWidth="75.0" text="Available" />
               </columns>
                <contextMenu>
-                  <ContextMenu fx:id="contextMenuTable">
+                  <ContextMenu fx:id="contextBooksMenuTable">
                     <items>
                       <MenuItem fx:id="menuItemBorrowBook" mnemonicParsing="false" onAction="#borrowBook" text="Borrow book" />
                     </items>
