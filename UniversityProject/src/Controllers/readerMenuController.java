@@ -169,7 +169,22 @@ public class readerMenuController implements Initializable {
     			infoBox("You have already requested to borrow this book.", null, "Books");
     			return;
     		}
-    	}   	
+    	}
+    	List<Issue> oList = null;
+    	try {
+			oList = oIssueData.SelectAll();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+    	for(Issue i : oList)
+    	{
+    		if(i.getBookID() == oBook.getID())
+    		{
+    			infoBox("Somebody has already requested to borrow this book.", null, "Books");
+    			return;
+    		}
+    	}
     	
     	Alert alert = new Alert(AlertType.CONFIRMATION, "Request the book: " + oBook.getTitle() + " ?", ButtonType.YES, ButtonType.NO);
     	alert.setHeaderText(null);
