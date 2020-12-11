@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import BusinessLogic.OperatorFunctions.HBoxCell;
 import DAO.AccountsDAOImplementation;
 import DAO.BooksDAOImplementation;
 import DAO.IssueDAOImplementation;
@@ -26,7 +27,6 @@ import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -36,7 +36,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.util.Callback;
 import tray.animations.AnimationType;
 import tray.notification.NotificationType;
 import tray.notification.TrayNotification;
@@ -52,6 +51,13 @@ public class OperatorFunctions {
     private static boolean returnedFlag;
     
     private static boolean stopFlag=false;
+    
+    private static ObservableList<HBoxCell> ol;
+    private static ListView<HBoxCell> lv;
+    
+    public void setNotifyList(ListView<HBoxCell> listView) {
+    	lv=listView;
+    }
     
   //=============THREAD
     public void startNotifyThread() {
@@ -77,7 +83,8 @@ public class OperatorFunctions {
 							}
 								
 						});
-						return null;
+						
+						registerFlag=false;
 					}
 					else if(issueFlag==true) {
 						Platform.runLater(new Runnable() {
@@ -90,7 +97,8 @@ public class OperatorFunctions {
 							}
 								
 						});
-						return null;
+						
+						issueFlag=false;
 					}
 					else if(returnedFlag==true) {
 						Platform.runLater(new Runnable() {
@@ -103,7 +111,8 @@ public class OperatorFunctions {
 							}
 								
 						});
-						return null;
+						
+						returnedFlag=false;
 					}
 					else {
 						Thread.sleep(2000);
@@ -113,23 +122,6 @@ public class OperatorFunctions {
 			}
 				
 		};
-			
-		notify.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-
-			@Override
-			public void handle(WorkerStateEvent arg0) {
-				registerFlag=false;
-				issueFlag=false;
-				returnedFlag=false;
-				
-				if(stopFlag==false) {
-					Thread thr=new Thread(notify);
-					thr.setDaemon(true);
-					thr.start();
-				}
-			}
-				
-		});
 			
 		Thread th=new Thread(notify);
 		th.setDaemon(true);
@@ -153,46 +145,13 @@ public class OperatorFunctions {
 	}
 	
 	//=============ADD ISSUE REQUEST
-	public void issueRequest(Issue iss) {
+	public void issueRequest() {
 		issueFlag=true;
-			
-		try {
-			idi.Insert(iss);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 	}
 		
 	//=============RETURNED BOOK
-	public void returnedBook(Issue iss) {
+	public void returnedBook() {
 		returnedFlag=true;
-		
-		if(iss.getReturnedDate().after(iss.getReturnDate())) {
-			try {
-				Accounts acc=adi.SelectWhereID(iss.getAccountID());
-				
-				if(acc.getRatingID()!=0) {
-					acc.setRatingID(acc.getRatingID()-1);
-				}
-				
-				adi.UpdateWhereID(iss.getAccountID(), acc);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		else {
-			try {
-				Accounts acc=adi.SelectWhereID(iss.getAccountID());
-				
-				if(acc.getRatingID()!=10) {
-					acc.setRatingID(acc.getRatingID()+1);
-				}
-				
-				adi.UpdateWhereID(iss.getAccountID(), acc);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 	
 	//=============CLASS FOR THE LIST DATA
@@ -241,7 +200,7 @@ public class OperatorFunctions {
        	    				Accounts acc=adi.SelectWhereID(i.getAccountID());
        	    				Books boo=bdi.SelectWhereID(i.getBookID());
        	    				
-       	    				this.lbl.setText("Reader "+acc.getUsername()+" want to borrow '"+boo.getTitle()+"' book");
+       	    				this.lbl.setText("Reader "+acc.getUsername()+" want to return '"+boo.getTitle()+"' book");
        	    			}
        	    		}
        	    		
@@ -304,6 +263,9 @@ public class OperatorFunctions {
      	    				Accounts acc=a;
      	    				
          	    			adi.UpdateWhereID(acc.getID(), acc);
+         	    			
+         	    			setNotifyListData();
+         	    			break;
      	    			}
      	    		}
      	    	}
@@ -329,6 +291,9 @@ public class OperatorFunctions {
      	    				Accounts acc=a;
          	    			
          	    			adi.DeleteWhereID(acc.getID());
+         	    			
+         	    			setNotifyListData();
+         	    			break;
      	    			}
      	    		}
      	    	}
@@ -357,6 +322,9 @@ public class OperatorFunctions {
          	    			Books boo=bdi.SelectWhereID(i.getBookID());
          	    			boo.setAvailable(false);
          	    			bdi.UpdateWhereID(i.getBookID(), boo);
+         	    			
+         	    			setNotifyListData();
+         	    			break;
      	    			}
      	    		}
      	    		
@@ -383,6 +351,9 @@ public class OperatorFunctions {
      	    				Issue iss=i;
          	    			
          	    			idi.DeleteWhereID(iss.getID());
+         	    			
+         	    			setNotifyListData();
+         	    			break;
      	    			}
      	    		}
      	    	}
@@ -423,37 +394,50 @@ public class OperatorFunctions {
 	     	    				
 	     	    				Optional<String> result = dialog.showAndWait();
 	     	    				if (result.isPresent()){
+	     	    					
 	     	    				    for(String s : choices) {
 	     	    				    	if(s.equals(result.get())) {
-	     	    				    		iss.setReturnedCondition(choices.indexOf(s));
+	     	    				    		iss.setReturnedCondition(choices.indexOf(s)+1);
 	     	    				    		
 	     	    				    		Books boo=bdi.SelectWhereID(iss.getBookID());
-	     	    				    		if(choices.indexOf(s)!=boo.getCondition()) {
+	     	    				    		boo.setAvailable(true);
+	     	    				    		bdi.UpdateWhereID(boo.getID(), boo);
+	     	    				    		
+	     	    				    		if((choices.indexOf(s)!=boo.getCondition()) && (iss.getReturnedDate().after(iss.getReturnDate()))) {
 	     	    				    			Accounts acc=adi.SelectWhereID(iss.getAccountID());
 	     	    								
-	     	    								if(acc.getRatingID()!=0) {
+	     	    								if(acc.getRatingID()>=2) {
 	     	    									acc.setRatingID(acc.getRatingID()-1);
 	     	    								}
 	     	    								
 	     	    								adi.UpdateWhereID(iss.getAccountID(), acc);
 	     	    				    		}
+	     	    				    		else if((choices.indexOf(s)!=boo.getCondition()) || (iss.getReturnedDate().after(iss.getReturnDate()))){
+	     	    				    			
+	     	    				    		}
 	     	    				    		else {
 	     	    				    			Accounts acc=adi.SelectWhereID(iss.getAccountID());
 	     	    								
-	     	    								if(acc.getRatingID()!=10) {
+	     	    								if(acc.getRatingID()<=4) {
 	     	    									acc.setRatingID(acc.getRatingID()+1);
 	     	    								}
 	     	    								
 	     	    								adi.UpdateWhereID(iss.getAccountID(), acc);
 	     	    				    		}
+	     	    				    			     	    				    		
+	     	    				    		break;
 	     	    				    	}
 	     	    				    }
+	     	    				   
+	     	    				   idi.UpdateWhereID(iss.getID(), iss);
+	     	    				   break;
 	     	    				}
 	     	    				
-	     	    				idi.UpdateWhereID(iss.getID(), iss);
 	     	    			}
 	     	    		}
 	     	    		
+	     	    		
+	     	    		setNotifyListData();
 	     	    	}
 	     			catch(SQLException ex) {
 	     				ex.printStackTrace();
@@ -472,26 +456,27 @@ public class OperatorFunctions {
 			List<Issue> li=idi.SelectAll();
 			
 			for (Accounts a : la) {
-    			if(a.getApproved() == false) {
+    			if(a.isApproved() == false) {
     				list.add(new HBoxCell("Reader", a.getID()));
     			}
     		}
 			
 			for (Issue i : li) {
-    			if(i.getApproved() == false) {
+    			if(i.isApproved() == false) {
     				list.add(new HBoxCell("Issue", i.getID()));
     			}
     			
-    			if(i.getReturnedDate()!=null) {
+    			if(i.getReturnedCondition()==10 && i.getReturnedDate() != null) {
     				list.add(new HBoxCell("Return", i.getID()));
     			}
     		}
 	        
-	        ListView<HBoxCell> listView = new ListView<HBoxCell>();
-	        ObservableList<HBoxCell> myObservableList = FXCollections.observableList(list);
-	        listView.setItems(myObservableList);
+	        ol = FXCollections.observableList(list);
 	        
-	        return listView;
+	        lv = new ListView<HBoxCell>();
+	        lv.setItems(ol);
+	        
+	        return lv;
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
@@ -499,8 +484,41 @@ public class OperatorFunctions {
 		
 		return null;
 	}
+	
+	public static void setNotifyListData() {
+		try {
+			List<HBoxCell> list = new ArrayList<>();
+			List<Accounts> la=adi.SelectAll();
+			List<Issue> li=idi.SelectAll();
+			
+			for (Accounts a : la) {
+				if(a.isApproved() == false) {
+					list.add(new HBoxCell("Reader", a.getID()));
+				}
+			}
+			
+			for (Issue i : li) {
+				if(i.isApproved() == false) {
+					list.add(new HBoxCell("Issue", i.getID()));
+				}
+				
+				if(i.getReturnedCondition()==10 && i.getReturnedDate() != null) {
+					list.add(new HBoxCell("Return", i.getID()));
+				}
+			}
+			
+			ol = FXCollections.observableList(list);
+	        
+	        lv.getItems().clear();
+	        lv.setItems(ol);
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
     
     //========FOR ACCOUNTS
+		
     public void setAccountTableData(TableView<Accounts> table) {
     	try {
     		List<Accounts> la=adi.SelectAll();
@@ -548,7 +566,7 @@ public class OperatorFunctions {
         return table;
     }
     
-    //=========FOR BOOKS 
+    //=========FOR BOOKS
     
     public void setBookTableData(TableView<Books> table) {
     	
@@ -667,7 +685,7 @@ public class OperatorFunctions {
            			}
 					if(n instanceof HBox) {
 						HBox hb=(HBox)n;
-						boolean flag=boo.getAvailable();
+						boolean flag=boo.isAvailable();
 						for (int i = 0; i < hb.getChildren().size(); i++) {											
 							RadioButton rb=(RadioButton) hb.getChildren().get(i);
 							
@@ -737,7 +755,34 @@ public class OperatorFunctions {
     	acc=(Accounts) table.getSelectionModel().getSelectedItem();
     	
     	try {
-    		adi.DeleteWhereID(acc.getID());
+    		List<Issue> li=idi.SelectAll();
+    		boolean flag=false;
+    		
+    		for(Issue i : li) {
+    			Accounts a=adi.SelectWhereID(i.getAccountID());
+				if(a.getUsername().equals(acc.getUsername())) {
+					flag=true;
+					break;
+				}
+			}
+    		
+    		if(flag==false) {
+    			List<Accounts> la=adi.SelectAll();
+    			
+    			for(Accounts a : la) {
+    				if(a.getUsername().equals(acc.getUsername())) {
+    					adi.DeleteWhereID(a.getID());
+    					break;
+    				}
+    			}
+    		}
+    		else {
+    			Alert alert = new Alert(AlertType.INFORMATION, "This reader still has books.", ButtonType.OK);
+        		alert.setTitle("Warning");
+        		alert.setHeaderText(null);
+        		alert.setGraphic(null);
+        		alert.showAndWait();
+    		}
     	} catch (SQLException e) {
     		e.printStackTrace();
     	}
@@ -748,8 +793,39 @@ public class OperatorFunctions {
     	Books boo=new Books();
 		boo=(Books) table.getSelectionModel().getSelectedItem();
 		
+		if(boo.isAvailable()==true) {
+			try {
+				List<Books> lb=bdi.SelectAll();
+				
+				for(Books b : lb) {
+					if(b.getTitle().equals(boo.getTitle())) {
+						bdi.DeleteWhereID(b.getID());
+						break;
+					}
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		else {
+			Alert alert = new Alert(AlertType.INFORMATION, "This book is not available.", ButtonType.OK);
+    		alert.setTitle("Warning");
+    		alert.setHeaderText(null);
+    		alert.setGraphic(null);
+    		alert.showAndWait();
+		}
+    }
+    
+    public void removeThisBook(Books boo) {
 		try {
-			bdi.DeleteWhereID(boo.getID());
+			List<Books> lb=bdi.SelectAll();
+			
+			for(Books b : lb) {
+				if(b.getTitle().equals(boo.getTitle())) {
+					bdi.DeleteWhereID(b.getID());
+					break;
+				}
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
