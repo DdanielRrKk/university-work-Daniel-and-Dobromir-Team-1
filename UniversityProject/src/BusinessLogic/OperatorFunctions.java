@@ -188,25 +188,21 @@ public class OperatorFunctions {
              
              if(type.equals("Issue")) {
             	 try {
-             		List<Issue> li=idi.SelectAll();
+            		Issue i=idi.SelectWhereID(id);
      	    			    		
-      	    		for(Issue i : li) {
-      	    			if(i.getID()==id) {
-      	    				Accounts acc=adi.SelectWhereID(i.getAccountID());
-      	    				Books boo=bdi.SelectWhereID(i.getBookID());
-      	    				
-      	    				this.lbl.setText("Reader "+acc.getUsername()+" want to borrow '"+boo.getTitle()+"' book");
-      	    			}
-      	    		}                	 
+            		Accounts acc=adi.SelectWhereID(i.getAccountID());
+	    			Books boo=bdi.SelectWhereID(i.getBookID());
+	    				
+	    			this.lbl.setText("Reader "+acc.getUsername()+" want to borrow '"+boo.getTitle()+"' book");     
+	    			
+	    			btnApr.setOnAction(makeApproveIssueAction(i));
+	   	    		btnRej.setOnAction(makeRejectIssueAction(i));
                  } catch (SQLException e) {
                 	 e.printStackTrace();
                  }
             	 
             	btnApr.setText("Approve");
    	            btnRej.setText("Reject");
-   	    		
-   	    		btnApr.setOnAction(makeApproveIssueAction(id));
-   	    		btnRej.setOnAction(makeRejectIssueAction(id));
    	    		
    	    		this.lbl.setMaxWidth(Double.MAX_VALUE);
    	            HBox.setHgrow(this.lbl, Priority.ALWAYS);
@@ -216,26 +212,20 @@ public class OperatorFunctions {
              }
              else if(type.equals("Return")) {
             	 try {
-              		List<Issue> li=idi.SelectAll();
-      	    		
-       	    		for(Issue i : li) {
-       	    			if(i.getID()==id) {
-       	    				Accounts acc=adi.SelectWhereID(i.getAccountID());
-       	    				Books boo=bdi.SelectWhereID(i.getBookID());
-       	    				
-       	    				this.lbl.setText("Reader "+acc.getUsername()+" want to return '"+boo.getTitle()+"' book");
-       	    			}
-       	    		}
+            		 Issue i=idi.SelectWhereID(id);
+            		 
+            		 Accounts acc=adi.SelectWhereID(i.getAccountID());
+            		 Books boo=bdi.SelectWhereID(i.getBookID());
+	    				
+	    			 this.lbl.setText("Reader "+acc.getUsername()+" want to return '"+boo.getTitle()+"' book");
        	    		
-       	    		btnApr.setOnAction(makeApproveIssueAction(id));
+	    			 btnApr.setOnAction(makeEvaluateAction(i));
                  	 
                  } catch (SQLException e) {
                  	 e.printStackTrace();
                  }
             	 
             	 btnApr.setText("Evaluate Book");
-            	
-            	 btnApr.setOnAction(makeEvaluateAction(id));
             	 
             	 this.lbl.setMaxWidth(Double.MAX_VALUE);
                  HBox.setHgrow(this.lbl, Priority.ALWAYS);
@@ -246,21 +236,22 @@ public class OperatorFunctions {
               else {
             	 try {
             		List<Accounts> la=adi.SelectAll();
+            		Issue i=idi.SelectWhereID(id);
             	 
             	 	for (Accounts a : la) {
             	 		if(a.getID()==id) {
       	    				this.lbl.setText("Reader "+a.getUsername()+" is waiting to be approved");
   	    				}
   	    			}
+            	 	
+            	 	btnApr.setOnAction(makeApproveAccountsAction(i));
+            	 	btnRej.setOnAction(makeRejectAccountsAction(i));
             	 } catch (SQLException e) {
                  	 e.printStackTrace();
                  }
             	 
             	 btnApr.setText("Approve");
    	           	 btnRej.setText("Reject");
-            	
-            	 btnApr.setOnAction(makeApproveAccountsAction(id));
-            	 btnRej.setOnAction(makeRejectAccountsAction(id));
             	 
             	 this.lbl.setMaxWidth(Double.MAX_VALUE);
                  HBox.setHgrow(this.lbl, Priority.ALWAYS);
@@ -273,14 +264,14 @@ public class OperatorFunctions {
 	
 	
 	//====ACCOUNTS EVENTS
-	private static EventHandler<ActionEvent> makeApproveAccountsAction(int id) {
+	private static EventHandler<ActionEvent> makeApproveAccountsAction(Issue iss) {
 		EventHandler<ActionEvent> ev = new EventHandler<ActionEvent>() { 
             public void handle(ActionEvent e) { 
             	try {
      	    		List<Accounts> la=adi.SelectAll();
      	    		
      	    		for (Accounts a : la) {
-     	    			if(a.getID()==id) {
+     	    			if(a.getID()==iss.getAccountID()) {
      	    				a.setApproved(true);
      	    				
      	    				Accounts acc=a;
@@ -301,14 +292,14 @@ public class OperatorFunctions {
         return ev;
 	}
 	
-	private static EventHandler<ActionEvent> makeRejectAccountsAction(int id) {
+	private static EventHandler<ActionEvent> makeRejectAccountsAction(Issue iss) {
 		EventHandler<ActionEvent> ev = new EventHandler<ActionEvent>() { 
             public void handle(ActionEvent e) { 
             	try {
      	    		List<Accounts> la=adi.SelectAll();
      	    		
      	    		for (Accounts a : la) {
-     	    			if(a.getID()==id) {
+     	    			if(a.getID()==iss.getAccountID()) {
      	    				a.setApproved(false);
      	    				
      	    				Accounts acc=a;
@@ -330,26 +321,19 @@ public class OperatorFunctions {
 	}
 	
 	//=========ISSUES EVENTS
-	private static EventHandler<ActionEvent> makeApproveIssueAction(int id) {
+	private static EventHandler<ActionEvent> makeApproveIssueAction(Issue iss) {
 		EventHandler<ActionEvent> ev = new EventHandler<ActionEvent>() { 
             public void handle(ActionEvent e) { 
             	try {
-            		List<Issue> li=idi.SelectAll();
-     	    		   	    		
-     	    		for(Issue i : li) {
-     	    			if(i.getID()==id) {
-     	    				i.setApproved(true);
-     	    				Issue iss=i;
-         	    			idi.UpdateWhereID(iss.getID(), iss);
-         	    			
-         	    			Books boo=bdi.SelectWhereID(i.getBookID());
-         	    			boo.setAvailable(false);
-         	    			bdi.UpdateWhereID(i.getBookID(), boo);
-         	    			
-         	    			setNotifyListData();
-         	    			break;
-     	    			}
-     	    		}
+            		Issue i=iss;	
+	    			i.setApproved(true);
+ 	    			idi.UpdateWhereID(iss.getID(), i);
+ 	    			
+ 	    			Books boo=bdi.SelectWhereID(iss.getBookID());
+ 	    			boo.setAvailable(false);
+ 	    			bdi.UpdateWhereID(iss.getBookID(), boo);
+ 	    			
+ 	    			setNotifyListData();
      	    		
      	    	}
      			catch(SQLException ex) {
@@ -361,24 +345,14 @@ public class OperatorFunctions {
         return ev;
 	}
 	
-	private static EventHandler<ActionEvent> makeRejectIssueAction(int id) {
+	private static EventHandler<ActionEvent> makeRejectIssueAction(Issue iss) {
 		EventHandler<ActionEvent> ev = new EventHandler<ActionEvent>() { 
             public void handle(ActionEvent e) { 
             	try {
-     	    		List<Issue> li=idi.SelectAll();
-     	    		
-     	    		for(Issue i : li) {
-     	    			if(i.getID()==id) {
-     	    				i.setApproved(true);
-     	    				
-     	    				Issue iss=i;
-         	    			
-         	    			idi.DeleteWhereID(iss.getID());
-         	    			
-         	    			setNotifyListData();
-         	    			break;
-     	    			}
-     	    		}
+            		
+ 	    			idi.DeleteWhereID(iss.getID());
+ 	    			
+ 	    			setNotifyListData();
      	    	}
      			catch(SQLException ex) {
      				ex.printStackTrace();
@@ -390,88 +364,78 @@ public class OperatorFunctions {
 	}
 	
 	//=========EVALUATE BOOK
-		private static EventHandler<ActionEvent> makeEvaluateAction(int id) {
+		private static EventHandler<ActionEvent> makeEvaluateAction(Issue iss) {
 			EventHandler<ActionEvent> ev = new EventHandler<ActionEvent>() { 
 	            public void handle(ActionEvent e) { 
 	            	try {
-	            		List<Issue> li=idi.SelectAll();
-	     	    		
-	     	    		for(Issue i : li) {
-	     	    			Issue iss=i;
-	     	    			
-	     	    			if(iss.getID()==id) {
-	     	    				Books boo=bdi.SelectWhereID(iss.getBookID());
-	     	    				
-	     	    				List<String> choices = new ArrayList<>();
-	     	    				choices.add("As new");
-	     	    				choices.add("Fine");
-	     	    				choices.add("Very good");
-	     	    				choices.add("Good");
-	     	    				choices.add("Fair");
-	     	    				choices.add("Worn");
-	     	    				choices.add("Poor");
-	     	    				choices.add("Very poor");
-	     	    				choices.add("For scrapping");
+	            		Issue i=iss;
+	            		Books boo=bdi.SelectWhereID(i.getBookID());
+ 	    				
+ 	    				List<String> choices = new ArrayList<>();
+ 	    				choices.add("As new");
+ 	    				choices.add("Fine");
+ 	    				choices.add("Very good");
+ 	    				choices.add("Good");
+ 	    				choices.add("Fair");
+ 	    				choices.add("Worn");
+ 	    				choices.add("Poor");
+ 	    				choices.add("Very poor");
+ 	    				choices.add("For scrapping");
 
-	     	    				ChoiceDialog<String> dialog = new ChoiceDialog<>(""+choices.get(boo.getCondition()-1), choices);
-	     	    				dialog.setTitle("Evaluate book condition");
-	     	    				dialog.setContentText("Choose condition:");
-	     	    				
-	     	    				Optional<String> result = dialog.showAndWait();
-	     	    				if (result.isPresent()){
-	     	    					
-	     	    				    for(String s : choices) {
-	     	    				    	if(s.equals(result.get())) {
-	     	    				    		
-	     	    				    		if(choices.indexOf(s) < boo.getCondition()-1) {
-	     	    				    			Alert alert = new Alert(AlertType.INFORMATION, "You cant set the condition of the book, higher than "+choices.get(boo.getCondition()-1)+".", ButtonType.OK);
-	     	    			            		alert.setTitle("Warning");
-	     	    			            		alert.setHeaderText(null);
-	     	    			            		alert.setGraphic(null);
-	     	    			            		alert.showAndWait();
-	     	    			            		return;
-		     	    				    	}
-	     	    				    		
-	     	    				    		iss.setReturnedCondition(choices.indexOf(s)+1);
-	     	    				    		
-	     	    				    		boo.setAvailable(true);
-	     	    				    		boo.setCondition(choices.indexOf(s)+1);
-	     	    				    		bdi.UpdateWhereID(iss.getBookID(), boo);
-	     	    				    		
-	     	    				    		if((choices.indexOf(s)!=boo.getCondition()) && (iss.getReturnedDate().after(iss.getReturnDate()))) {
-	     	    				    			Accounts acc=adi.SelectWhereID(iss.getAccountID());
-	     	    								
-	     	    								if(acc.getRatingID()>=2) {
-	     	    									acc.setRatingID(acc.getRatingID()-1);
-	     	    								}
-	     	    								
-	     	    								adi.UpdateWhereID(iss.getAccountID(), acc);
-	     	    				    		}
-	     	    				    		else if((choices.indexOf(s)!=boo.getCondition()) || (iss.getReturnedDate().after(iss.getReturnDate()))){
-	     	    				    			// rating stays the same
-	     	    				    		}
-	     	    				    		else {
-	     	    				    			Accounts acc=adi.SelectWhereID(iss.getAccountID());
-	     	    								
-	     	    								if(acc.getRatingID()<=4) {
-	     	    									acc.setRatingID(acc.getRatingID()+1);
-	     	    								}
-	     	    								
-	     	    								adi.UpdateWhereID(iss.getAccountID(), acc);
-	     	    				    		}
-	     	    				    			     	    				    		
-	     	    				    		break;
-	     	    				    	}
-	     	    				    }
-	     	    				   
-	     	    				   idi.UpdateWhereID(iss.getID(), iss);
-	     	    				   break;
-	     	    				}
-	     	    				
-	     	    			}
-	     	    		}
-	     	    		
-	     	    		
+ 	    				ChoiceDialog<String> dialog = new ChoiceDialog<>(""+choices.get(boo.getCondition()-1), choices);
+ 	    				dialog.setTitle("Evaluate book condition");
+ 	    				dialog.setContentText("Choose condition:");
+ 	    				
+ 	    				Optional<String> result = dialog.showAndWait();
+ 	    				if (result.isPresent()){
+ 	    					
+ 	    				    for(String s : choices) {
+ 	    				    	if(s.equals(result.get())) {
+ 	    				    		
+ 	    				    		if(choices.indexOf(s) < boo.getCondition()-1) {
+ 	    				    			Alert alert = new Alert(AlertType.INFORMATION, "You cant set the condition of the book, higher than "+choices.get(boo.getCondition()-1)+".", ButtonType.OK);
+ 	    			            		alert.setTitle("Warning");
+ 	    			            		alert.setHeaderText(null);
+ 	    			            		alert.setGraphic(null);
+ 	    			            		alert.showAndWait();
+ 	    			            		return;
+     	    				    	}
+ 	    				    		
+ 	    				    		i.setReturnedCondition(choices.indexOf(s)+1);
+ 	    				    		
+ 	    				    		boo.setAvailable(true);
+ 	    				    		boo.setCondition(choices.indexOf(s)+1);
+ 	    				    		bdi.UpdateWhereID(i.getBookID(), boo);
+ 	    				    		
+ 	    				    		if((choices.indexOf(s)!=boo.getCondition()) && (i.getReturnedDate().after(i.getReturnDate()))) {
+ 	    				    			Accounts acc=adi.SelectWhereID(i.getAccountID());
+ 	    								
+ 	    								if(acc.getRatingID()>=2) {
+ 	    									acc.setRatingID(acc.getRatingID()-1);
+ 	    								}
+ 	    								
+ 	    								adi.UpdateWhereID(i.getAccountID(), acc);
+ 	    				    		}
+ 	    				    		else if((choices.indexOf(s)!=boo.getCondition()) || (i.getReturnedDate().after(i.getReturnDate()))){
+ 	    				    			// rating stays the same
+ 	    				    		}
+ 	    				    		else {
+ 	    				    			Accounts acc=adi.SelectWhereID(i.getAccountID());
+ 	    								
+ 	    								if(acc.getRatingID()<=4) {
+ 	    									acc.setRatingID(acc.getRatingID()+1);
+ 	    								}
+ 	    								
+ 	    								adi.UpdateWhereID(i.getAccountID(), acc);
+ 	    				    		}
+ 	    				    			     	    				    		
+ 	    				    		break;
+ 	    				    	}
+ 	    				    }
+ 	    				   
+ 	    				   idi.UpdateWhereID(iss.getID(), i);
+ 	    				}
+ 	    				
 	     	    		setNotifyListData();
 	     	    	}
 	     			catch(SQLException ex) {
