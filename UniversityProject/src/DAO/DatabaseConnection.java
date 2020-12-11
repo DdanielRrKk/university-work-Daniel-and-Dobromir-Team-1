@@ -9,6 +9,7 @@ public class DatabaseConnection {
 	private DatabaseConnection() {
 		try {
 			String dbURL = "jdbc:sqlserver://DESKTOP-EHGHC3A;user=sa;password=sysadm123;databaseName=LibraryDB";
+			//String dbURL = "jdbc:sqlserver://DESKTOP-F6N9F54;user=sa;password=sysadm123;databaseName=LibraryDB";
 			connection = DriverManager.getConnection(dbURL);
 		} catch (SQLException e) {
 			System.out.println("Failed to connect to database.");
