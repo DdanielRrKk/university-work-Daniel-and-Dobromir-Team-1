@@ -2,20 +2,16 @@ package Controllers;
 
 import java.sql.SQLException;
 
+import BusinessLogic.OperatorFunctions;
 import DAO.AccountsDAOImplementation;
 import Interfaces.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 
 public class logInMenuController {
 
@@ -30,6 +26,8 @@ public class logInMenuController {
     
     @FXML
     private Button li_BackBtn;
+    
+    OperatorFunctions of=new OperatorFunctions();
 
     @FXML
     void li_loggingIn(ActionEvent event) throws SQLException 
@@ -63,13 +61,14 @@ public class logInMenuController {
 	    }
         else if(accdao.ValidateLogin(username, password) == 2)
         {
+        	of.startNotifyThread();        	
         	Main.getInstance().setID(accdao.GetUserID(username, password));
-        	Main.getInstance().setScene("../Interfaces/operatorMenu.fxml");       	
+        	Main.getInstance().setScene("../Interfaces/operatorMenu.fxml"); 
         }
         else if(accdao.ValidateLogin(username, password) == 3) 
         {
         	Main.getInstance().setID(accdao.GetUserID(username, password));
-        	Main.getInstance().setScene("../Interfaces/readerMenu.fxml");       	
+        	Main.getInstance().setScene("../Interfaces/readerMenu.fxml");         	
         }
     }    	
     
