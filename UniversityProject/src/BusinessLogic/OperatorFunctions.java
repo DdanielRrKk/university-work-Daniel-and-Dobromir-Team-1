@@ -61,6 +61,29 @@ public class OperatorFunctions {
     
   //=============THREAD
     public void startNotifyThread() {
+    	try {
+	    	List<Accounts> la=adi.SelectAll();
+			List<Issue> li=idi.SelectAll();
+	    	
+	    	for (Accounts a : la) {
+				if(a.isApproved() == false) {
+					registerFlag=true;
+				}
+			}
+			
+			for (Issue i : li) {
+				if(i.isApproved() == false) {
+					issueFlag=true;
+				}
+				
+				if(i.getReturnedCondition()==10 && i.getReturnedDate() != null) {
+					returnedFlag=true;
+				}
+			}
+    	}
+    	catch(SQLException e) {
+    		e.printStackTrace();
+    	}
     	
     	stopFlag=false;
     	
@@ -377,6 +400,8 @@ public class OperatorFunctions {
 	     	    			Issue iss=i;
 	     	    			
 	     	    			if(iss.getID()==id) {
+	     	    				Books boo=bdi.SelectWhereID(iss.getBookID());
+	     	    				
 	     	    				List<String> choices = new ArrayList<>();
 	     	    				choices.add("As new");
 	     	    				choices.add("Fine");
@@ -388,7 +413,7 @@ public class OperatorFunctions {
 	     	    				choices.add("Very poor");
 	     	    				choices.add("For scrapping");
 
-	     	    				ChoiceDialog<String> dialog = new ChoiceDialog<>("", choices);
+	     	    				ChoiceDialog<String> dialog = new ChoiceDialog<>(""+choices.get(boo.getCondition()-1), choices);
 	     	    				dialog.setTitle("Evaluate book condition");
 	     	    				dialog.setContentText("Choose condition:");
 	     	    				
@@ -397,11 +422,21 @@ public class OperatorFunctions {
 	     	    					
 	     	    				    for(String s : choices) {
 	     	    				    	if(s.equals(result.get())) {
+	     	    				    		
+	     	    				    		if(choices.indexOf(s) < boo.getCondition()-1) {
+	     	    				    			Alert alert = new Alert(AlertType.INFORMATION, "You cant set the condition of the book, higher than "+choices.get(boo.getCondition()-1)+".", ButtonType.OK);
+	     	    			            		alert.setTitle("Warning");
+	     	    			            		alert.setHeaderText(null);
+	     	    			            		alert.setGraphic(null);
+	     	    			            		alert.showAndWait();
+	     	    			            		return;
+		     	    				    	}
+	     	    				    		
 	     	    				    		iss.setReturnedCondition(choices.indexOf(s)+1);
 	     	    				    		
-	     	    				    		Books boo=bdi.SelectWhereID(iss.getBookID());
 	     	    				    		boo.setAvailable(true);
-	     	    				    		bdi.UpdateWhereID(boo.getID(), boo);
+	     	    				    		boo.setCondition(choices.indexOf(s)+1);
+	     	    				    		bdi.UpdateWhereID(iss.getBookID(), boo);
 	     	    				    		
 	     	    				    		if((choices.indexOf(s)!=boo.getCondition()) && (iss.getReturnedDate().after(iss.getReturnDate()))) {
 	     	    				    			Accounts acc=adi.SelectWhereID(iss.getAccountID());
@@ -413,7 +448,7 @@ public class OperatorFunctions {
 	     	    								adi.UpdateWhereID(iss.getAccountID(), acc);
 	     	    				    		}
 	     	    				    		else if((choices.indexOf(s)!=boo.getCondition()) || (iss.getReturnedDate().after(iss.getReturnDate()))){
-	     	    				    			
+	     	    				    			// rating stays the same
 	     	    				    		}
 	     	    				    		else {
 	     	    				    			Accounts acc=adi.SelectWhereID(iss.getAccountID());
