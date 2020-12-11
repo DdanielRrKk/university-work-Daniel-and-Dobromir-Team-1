@@ -1,19 +1,12 @@
 package Interfaces;
 
 import java.io.IOException;
-import java.sql.SQLException;
-
-import BusinessLogic.AccountsData;
-import BusinessLogic.BooksData;
-import Model.Accounts;
-import Model.Books;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-
-
+import javafx.scene.image.Image;
 
 public class Main extends Application 
 {
@@ -31,15 +24,12 @@ public class Main extends Application
 	public void start(Stage primaryStage) 
 	{
 		mainStage = primaryStage;
-		mainStage.setResizable(false);
 		try 
 		{
-			Parent root = FXMLLoader.load(getClass().getResource("startMenu.fxml"));
-			Scene scene = new Scene(root,385,202);
-			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-			primaryStage.setTitle("Library System");
-			primaryStage.setScene(scene);
-			primaryStage.show();
+			Main.getInstance().setScene("../Interfaces/startMenu.fxml");
+			mainStage.getIcons().add(new Image("/icon.png"));
+			mainStage.setTitle("Library System");
+			mainStage.setResizable(false);
 		} catch(Exception e) 
 		{
 			e.printStackTrace();
