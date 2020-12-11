@@ -9,6 +9,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import Model.Accounts;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Alert.AlertType;
 
 public class AccountsDAOImplementation implements AccountsDAO 
 {
@@ -163,6 +166,9 @@ public class AccountsDAOImplementation implements AccountsDAO
 			{
 				connection.rollback();
 				connection.setAutoCommit(true);
+				Alert alert = new Alert(AlertType.CONFIRMATION, "An update occured while you were working. Please restart the application.", ButtonType.OK);
+		    	alert.setHeaderText(null);
+		    	alert.showAndWait();
 				return;
 			}
 			

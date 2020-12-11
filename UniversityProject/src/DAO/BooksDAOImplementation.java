@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Model.Books;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Alert.AlertType;
 
 public class BooksDAOImplementation implements BooksDAO 
 {
@@ -114,6 +117,9 @@ public class BooksDAOImplementation implements BooksDAO
 			{
 				connection.rollback();
 				connection.setAutoCommit(true);
+				Alert alert = new Alert(AlertType.CONFIRMATION, "An update occured while you were working. Please restart the application.", ButtonType.OK);
+		    	alert.setHeaderText(null);
+		    	alert.showAndWait();
 				return;
 			}
 			

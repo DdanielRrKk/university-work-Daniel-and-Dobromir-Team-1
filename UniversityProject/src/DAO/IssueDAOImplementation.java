@@ -8,6 +8,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import Model.Issue;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Alert.AlertType;
 
 public class IssueDAOImplementation implements IssueDAO
 {
@@ -119,10 +122,14 @@ public class IssueDAOImplementation implements IssueDAO
 			{
 				connection.rollback();
 				connection.setAutoCommit(true);
+				Alert alert = new Alert(AlertType.CONFIRMATION, "An update occured while you were working. Please restart the application.", ButtonType.OK);
+		    	alert.setHeaderText(null);
+		    	alert.showAndWait();
 				return;
 			}
 			
 			oIssue.setUpdateCounter(rs.getInt("UPDATE_COUNTER")+1);
+			rs.updateInt("UPDATE_COUNTER", oIssue.getUpdateCounter());
 			rs.updateInt("BOOK_ID", oIssue.getBookID());
 			rs.updateInt("ACCOUNT_ID", oIssue.getAccountID());
 			rs.updateDate("RETURN_DATE", oIssue.getReturnDate());
