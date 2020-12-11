@@ -7,12 +7,11 @@ import java.util.Calendar;
 import java.sql.Date;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import BusinessLogic.AccountsData;
 import BusinessLogic.BooksData;
 import BusinessLogic.IssueData;
+import BusinessLogic.OperatorFunctions;
+import DAO.BooksDAOImplementation;
 import Interfaces.Main;
-import Model.Accounts;
 import Model.Books;
 import Model.Issue;
 import javafx.event.ActionEvent;
@@ -28,8 +27,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 public class readerMenuController implements Initializable {
 
@@ -58,6 +55,8 @@ public class readerMenuController implements Initializable {
 
     @FXML private MenuItem menuItemBorrowBook;
     private MenuItem menuItemIssueBook;
+    
+    OperatorFunctions of = new OperatorFunctions();
 
     public readerMenuController()
     {
@@ -163,7 +162,16 @@ public class readerMenuController implements Initializable {
     		return;
     	}
     	
-    	Alert alert = new Alert(AlertType.CONFIRMATION, "Borrow the book: " + oBook.getTitle() + " ?", ButtonType.YES, ButtonType.NO);
+    	for(Issue obj : issueTable.getItems())
+    	{
+    		if(obj.getBookID() == oBook.getID())
+    		{
+    			infoBox("You have already requested to borrow this book.", null, "Books");
+    			return;
+    		}
+    	}   	
+    	
+    	Alert alert = new Alert(AlertType.CONFIRMATION, "Request the book: " + oBook.getTitle() + " ?", ButtonType.YES, ButtonType.NO);
     	alert.setHeaderText(null);
     	alert.showAndWait();
 
@@ -175,14 +183,16 @@ public class readerMenuController implements Initializable {
             c.add(Calendar.DATE, 30);
     		java.sql.Date returnDate = new java.sql.Date(c.getTimeInMillis());
     		oIssue.setBookID(oBook.getID());
-    		oIssue.setAccountID(3);
+    		oIssue.setAccountID(Main.getInstance().getID());
     		oIssue.setIssueDate(currentDate);
     		oIssue.setReturnDate(returnDate);
-    		oIssue.setReturnedCondition(3);
+    		oIssue.setReturnedCondition(10);
     		oIssue.setApproved(false);       		
     	    try 
     	    {
-				oIssueData.Insert(oIssue);
+				oIssueData.Insert(oIssue);				
+				issueTable.getItems().add(oIssue);
+				of.issueRequest();
 			} catch (SQLException e) 
     	    {
 
@@ -196,6 +206,16 @@ public class readerMenuController implements Initializable {
     	Issue oIssue = issueTable.getSelectionModel().getSelectedItem();
     	if(oIssue == null)
     	{
+    		return;
+    	}
+    	if(oIssue.isApproved() == false)
+    	{
+    		infoBox("Cannot return an unnaproved book borrow.", null, "Return book");
+    		return;
+    	}
+    	if(oIssue.getReturnedDate() != null)
+    	{
+    		infoBox("You have already returned this book.", null, "Return book");
     		return;
     	}
     	
@@ -212,6 +232,8 @@ public class readerMenuController implements Initializable {
     		try 
     		{
 				oIssueData.UpdateWhereID(oIssue.getID(), oIssue);
+				issueTable.getItems().set(issueTable.getSelectionModel().getSelectedIndex(), oIssue);
+				of.returnedBook();
 			} catch (SQLException e) 
     		{
 				// TODO Auto-generated catch block
@@ -254,14 +276,6 @@ public class readerMenuController implements Initializable {
     @FXML
     void rd_LoggingOut(ActionEvent event) 
     {
-    	closeReaderMenuWindow();
-    	fxmlScreenLoader fcl=new fxmlScreenLoader();
-    	fcl.loadScreen("../Interfaces/logInMenu.fxml");
-    }
-    
-    private void closeReaderMenuWindow() 
-    {
-    	((Stage)rd_logOutBtn.getScene().getWindow()).close();
-	}
-  
+    	Main.getInstance().setScene("../Interfaces/logInMenu.fxml");
+    } 
 }
