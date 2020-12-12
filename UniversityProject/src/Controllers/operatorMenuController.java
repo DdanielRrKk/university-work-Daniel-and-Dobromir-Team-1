@@ -414,7 +414,6 @@ public class operatorMenuController {
     	opr_border.setRight(vb2);
     	   		
     	of.getSelectedRowBooks(table, vb, list);
-    	
     }
 
     //=======================================EDIT READER
@@ -535,6 +534,14 @@ public class operatorMenuController {
     	EventHandler<ActionEvent> ev2 = new EventHandler<ActionEvent>() { 
             public void handle(ActionEvent e) 
             { 
+            	if(table.getSelectionModel().getSelectedItem() == null) {
+            		Alert alert = new Alert(AlertType.INFORMATION, "Select a book to be removed.", ButtonType.OK);
+            		alert.setTitle("Warning");
+            		alert.setHeaderText(null);
+            		alert.setGraphic(null);
+            		alert.showAndWait();
+            		return;
+            	}
             	Alert alert = new Alert(AlertType.CONFIRMATION, "Do you want to delete this book?");
         		alert.setTitle("Alert");
         		alert.setHeaderText(null);
@@ -574,6 +581,14 @@ public class operatorMenuController {
     	EventHandler<ActionEvent> ev2 = new EventHandler<ActionEvent>() { 
             public void handle(ActionEvent e) 
             { 
+            	if(table.getSelectionModel().getSelectedItem() == null) {
+            		Alert alert = new Alert(AlertType.INFORMATION, "Select a reader to be removed.", ButtonType.OK);
+            		alert.setTitle("Warning");
+            		alert.setHeaderText(null);
+            		alert.setGraphic(null);
+            		alert.showAndWait();
+            		return;
+            	}
             	Alert alert = new Alert(AlertType.CONFIRMATION, "Do you want to remove this reader?");
         		alert.setTitle("Alert");
         		alert.setHeaderText(null);
