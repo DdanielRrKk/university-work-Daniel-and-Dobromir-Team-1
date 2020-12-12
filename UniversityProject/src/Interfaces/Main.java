@@ -26,7 +26,7 @@ public class Main extends Application
 		mainStage = primaryStage;
 		try 
 		{
-			Main.getInstance().setScene("../Interfaces/startMenu.fxml");
+			Main.getInstance().setScene("/Interfaces/startMenu.fxml");
 			mainStage.getIcons().add(new Image("/icon.png"));
 			mainStage.setTitle("Library System");
 			mainStage.setResizable(false);
