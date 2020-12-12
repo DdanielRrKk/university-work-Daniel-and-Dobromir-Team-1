@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import BusinessLogic.AccountsData;
 import BusinessLogic.OperatorFunctions;
-import DAO.AccountsDAOImplementation;
 import Interfaces.Main;
 import Model.Accounts;
 import javafx.event.ActionEvent;
@@ -51,7 +52,7 @@ public class registerMenuController {
     private PasswordField reg_pass;
     
     OperatorFunctions of=new OperatorFunctions();
-    AccountsDAOImplementation adi=new AccountsDAOImplementation();
+    AccountsData ad=new AccountsData();
 
     @FXML
     void reg_registering(ActionEvent event) {
@@ -206,7 +207,7 @@ public class registerMenuController {
     	
     	List<Accounts> li=new ArrayList<Accounts>();
 		try {
-			li = adi.SelectAll();
+			li = ad.SelectAll();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -234,6 +235,6 @@ public class registerMenuController {
     
     @FXML
     void reg_backToStartManu(ActionEvent event) {
-    	Main.getInstance().setScene("/Interfaces/startMenu.fxml");
+    	Main.getInstance().setScene("../Interfaces/startMenu.fxml");
     }
 }
