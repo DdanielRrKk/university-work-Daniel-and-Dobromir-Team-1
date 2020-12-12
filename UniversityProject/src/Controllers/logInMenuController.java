@@ -57,25 +57,25 @@ public class logInMenuController {
         if(accdao.ValidateLogin(username, password) == 1) 
         {   	
         	Main.getInstance().setID(accdao.GetUserID(username, password));
-        	Main.getInstance().setScene("../Interfaces/adminMenu.fxml");       	
+        	Main.getInstance().setScene("/Interfaces/adminMenu.fxml");       	
 	    }
         else if(accdao.ValidateLogin(username, password) == 2)
         {
         	of.startNotifyThread();        	
         	Main.getInstance().setID(accdao.GetUserID(username, password));
-        	Main.getInstance().setScene("../Interfaces/operatorMenu.fxml"); 
+        	Main.getInstance().setScene("/Interfaces/operatorMenu.fxml"); 
         }
         else if(accdao.ValidateLogin(username, password) == 3) 
         {
         	Main.getInstance().setID(accdao.GetUserID(username, password));
-        	Main.getInstance().setScene("../Interfaces/readerMenu.fxml");         	
+        	Main.getInstance().setScene("/Interfaces/readerMenu.fxml");         	
         }
     }    	
     
     @FXML
     void li_backToStartManu(ActionEvent event) 
     {
-    	Main.getInstance().setScene("../Interfaces/startMenu.fxml");
+    	Main.getInstance().setScene("/Interfaces/startMenu.fxml");
     }
     
     private void infoBox(String infoMessage, String headerText, String title) 

@@ -118,7 +118,7 @@ public class adminMenuController implements Initializable
     @FXML
     void adm_LoggingOut(ActionEvent event) 
     {
-    	Main.getInstance().setScene("../Interfaces/logInMenu.fxml");
+    	Main.getInstance().setScene("/Interfaces/logInMenu.fxml");
     }
 
 	@Override

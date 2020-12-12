@@ -15,11 +15,11 @@ public class startMenuController {
     
     @FXML
     void st_toLogIn(ActionEvent event) {
-    	Main.getInstance().setScene("../Interfaces/logInMenu.fxml");
+    	Main.getInstance().setScene("/Interfaces/logInMenu.fxml");
     }
 
     @FXML
     void st_toRegister(ActionEvent event) {
-    	Main.getInstance().setScene("../Interfaces/registerMenu.fxml");
+    	Main.getInstance().setScene("/Interfaces/registerMenu.fxml");
     }   
 }

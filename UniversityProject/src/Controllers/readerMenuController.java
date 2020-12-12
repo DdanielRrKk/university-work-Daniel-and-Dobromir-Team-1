@@ -291,6 +291,6 @@ public class readerMenuController implements Initializable {
     @FXML
     void rd_LoggingOut(ActionEvent event) 
     {
-    	Main.getInstance().setScene("../Interfaces/logInMenu.fxml");
+    	Main.getInstance().setScene("/Interfaces/logInMenu.fxml");
     } 
 }
