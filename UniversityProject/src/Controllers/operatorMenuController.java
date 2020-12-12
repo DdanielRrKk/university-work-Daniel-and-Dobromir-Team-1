@@ -7,10 +7,10 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import BusinessLogic.AccountsData;
+import BusinessLogic.BooksData;
 import BusinessLogic.OperatorFunctions;
 import BusinessLogic.OperatorFunctions.HBoxCell;
-import DAO.AccountsDAOImplementation;
-import DAO.BooksDAOImplementation;
 import Interfaces.Main;
 import Model.Accounts;
 import Model.Books;
@@ -80,8 +80,8 @@ public class operatorMenuController {
     
     private OperatorFunctions of=new OperatorFunctions();
     
-    private AccountsDAOImplementation adi = new AccountsDAOImplementation();
-    private BooksDAOImplementation bdi=new BooksDAOImplementation();
+    private AccountsData ad = new AccountsData();
+    private BooksData bd=new BooksData();
 
     //================================================ADD BOOK
     @FXML
@@ -746,7 +746,7 @@ public class operatorMenuController {
     private boolean checkExistingBook(String title) {
     	List<Books> li=new ArrayList<Books>();
 		try {
-			li = bdi.SelectAll();
+			li = bd.SelectAll();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -765,7 +765,7 @@ public class operatorMenuController {
     	
     	List<Accounts> li=new ArrayList<Accounts>();
 		try {
-			li = adi.SelectAll();
+			li = ad.SelectAll();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
