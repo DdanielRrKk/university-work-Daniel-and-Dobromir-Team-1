@@ -51,6 +51,7 @@ public class OperatorFunctions {
     private static boolean returnedFlag;
     
     private static boolean stopFlag=false;
+    private int notifyCount=0;
     
     private static ObservableList<HBoxCell> ol;
     private static ListView<HBoxCell> lv;
@@ -61,25 +62,33 @@ public class OperatorFunctions {
     
   //=============THREAD
     public void startNotifyThread() {
+    	
     	try {
 	    	List<Accounts> la=adi.SelectAll();
 			List<Issue> li=idi.SelectAll();
 	    	
+			int count=0;
+			
 	    	for (Accounts a : la) {
 				if(a.isApproved() == false) {
 					registerFlag=true;
+					count++;
 				}
 			}
 			
 			for (Issue i : li) {
 				if(i.isApproved() == false) {
 					issueFlag=true;
+					count++;
 				}
 				
 				if(i.getReturnedCondition()==10 && i.getReturnedDate() != null) {
 					returnedFlag=true;
+					count++;
 				}
 			}
+			
+			notifyCount=count;
     	}
     	catch(SQLException e) {
     		e.printStackTrace();
@@ -90,8 +99,8 @@ public class OperatorFunctions {
     	Task<Void> notify=new Task<Void>() {
 
 			@Override
-			protected Void call() throws Exception {
-				while(true) {
+			protected Void call() throws Exception {				
+				while(true) {										
 					if(stopFlag==true) {
 						return null;
 					}
@@ -139,6 +148,48 @@ public class OperatorFunctions {
 					}
 					else {
 						Thread.sleep(2000);
+						
+						boolean tempRegisterFlag=false;
+						boolean tempIssueFlag=false;
+						boolean tempReturnedFlag=false;
+						
+						int tempNotifyCount=0;
+						
+						try {
+					    	List<Accounts> la=adi.SelectAll();
+							List<Issue> li=idi.SelectAll();
+					    	
+					    	for (Accounts a : la) {
+								if(a.isApproved() == false) {
+									tempRegisterFlag=true;
+									tempNotifyCount++;
+								}
+							}
+							
+							for (Issue i : li) {
+								if(i.isApproved() == false) {
+									tempIssueFlag=true;
+									tempNotifyCount++;
+								}
+								
+								if(i.getReturnedCondition()==10 && i.getReturnedDate() != null) {
+									tempReturnedFlag=true;
+									tempNotifyCount++;
+								}
+							}
+				    	}
+				    	catch(SQLException e) {
+				    		e.printStackTrace();
+				    	}
+						
+						if(notifyCount!=tempNotifyCount) {
+							registerFlag=tempRegisterFlag;
+							issueFlag=tempIssueFlag;
+							returnedFlag=tempReturnedFlag;
+							
+							notifyCount=tempNotifyCount;
+						}
+						
 					}
 					
 				}
@@ -235,17 +286,12 @@ public class OperatorFunctions {
               }
               else {
             	 try {
-            		List<Accounts> la=adi.SelectAll();
-            		Issue i=idi.SelectWhereID(id);
+            		 Accounts a=adi.SelectWhereID(id);
             	 
-            	 	for (Accounts a : la) {
-            	 		if(a.getID()==id) {
-      	    				this.lbl.setText("Reader "+a.getUsername()+" is waiting to be approved");
-  	    				}
-  	    			}
+            		 this.lbl.setText("Reader "+a.getUsername()+" is waiting to be approved");
             	 	
-            	 	btnApr.setOnAction(makeApproveAccountsAction(i));
-            	 	btnRej.setOnAction(makeRejectAccountsAction(i));
+            		 btnApr.setOnAction(makeApproveAccountsAction(a));
+            		 btnRej.setOnAction(makeRejectAccountsAction(a));
             	 } catch (SQLException e) {
                  	 e.printStackTrace();
                  }
@@ -264,24 +310,17 @@ public class OperatorFunctions {
 	
 	
 	//====ACCOUNTS EVENTS
-	private static EventHandler<ActionEvent> makeApproveAccountsAction(Issue iss) {
+	private static EventHandler<ActionEvent> makeApproveAccountsAction(Accounts a) {
 		EventHandler<ActionEvent> ev = new EventHandler<ActionEvent>() { 
             public void handle(ActionEvent e) { 
             	try {
-     	    		List<Accounts> la=adi.SelectAll();
+            		Accounts acc=a;
      	    		
-     	    		for (Accounts a : la) {
-     	    			if(a.getID()==iss.getAccountID()) {
-     	    				a.setApproved(true);
-     	    				
-     	    				Accounts acc=a;
-     	    				
-         	    			adi.UpdateWhereID(acc.getID(), acc);
-         	    			
-         	    			setNotifyListData();
-         	    			break;
-     	    			}
-     	    		}
+            		acc.setApproved(true);
+            		
+            		adi.UpdateWhereID(a.getID(), acc);
+ 	    			
+ 	    			setNotifyListData();
      	    	}
      			catch(SQLException ex) {
      				ex.printStackTrace();
@@ -292,24 +331,14 @@ public class OperatorFunctions {
         return ev;
 	}
 	
-	private static EventHandler<ActionEvent> makeRejectAccountsAction(Issue iss) {
+	private static EventHandler<ActionEvent> makeRejectAccountsAction(Accounts a) {
 		EventHandler<ActionEvent> ev = new EventHandler<ActionEvent>() { 
             public void handle(ActionEvent e) { 
             	try {
-     	    		List<Accounts> la=adi.SelectAll();
-     	    		
-     	    		for (Accounts a : la) {
-     	    			if(a.getID()==iss.getAccountID()) {
-     	    				a.setApproved(false);
-     	    				
-     	    				Accounts acc=a;
-         	    			
-         	    			adi.DeleteWhereID(acc.getID());
-         	    			
-         	    			setNotifyListData();
-         	    			break;
-     	    			}
-     	    		}
+            		
+            		adi.DeleteWhereID(a.getID());
+ 	    			
+ 	    			setNotifyListData();
      	    	}
      			catch(SQLException ex) {
      				ex.printStackTrace();
