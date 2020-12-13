@@ -76,4 +76,13 @@ public class DataValidator
 			return false;
 		return true;
 	}
+	
+	public boolean validateMinSize(String strData, int minSize)
+	{
+		if(strData.length() < minSize)
+		{
+			return false;
+		}
+		return true;
+	}
 }
