@@ -114,6 +114,10 @@ public class readerMenuController implements Initializable {
     	
     	for(Issue oIssue : list)
     	{
+    		if(oIssue.getReturnedDate() != null)
+    		{
+    			continue;
+    		}
     		issueTable.getItems().add(oIssue);
     	}
     }
@@ -238,7 +242,7 @@ public class readerMenuController implements Initializable {
     		try 
     		{
 				oIssueData.UpdateWhereID(oIssue.getID(), oIssue);
-				issueTable.getItems().set(issueTable.getSelectionModel().getSelectedIndex(), oIssue);
+				issueTable.getItems().remove(issueTable.getSelectionModel().getSelectedIndex());
 				of.returnedBook();
 			} catch (SQLException e) 
     		{
