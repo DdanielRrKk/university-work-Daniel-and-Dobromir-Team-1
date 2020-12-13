@@ -642,6 +642,54 @@ public class OperatorFunctions {
     	return table;
     }
     
+    //=========FOR ISSUES
+    
+    public void setIssueTableData(TableView<Issue> table) {
+    	
+    	try {
+			List<Issue> li=idi.SelectAll();
+			
+			for (Issue i : li) {
+				table.getItems().add(i);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    }
+    
+    public TableView<Issue> makeIssueTable() {    	
+    	TableView<Issue> table = new TableView<>();
+    	table.setEditable(false);
+    	
+    	TableColumn<Issue, Integer> idCol = new TableColumn<>("ID");
+    	idCol.setCellValueFactory(new PropertyValueFactory<>("ID"));
+    	idCol.setMaxWidth(30);
+    	
+        TableColumn<Issue, String> bookCol = new TableColumn<>("BookID");
+        bookCol.setCellValueFactory(new PropertyValueFactory<>("BookID"));
+        
+        TableColumn<Issue, String> accountCol = new TableColumn<>("AccountID");
+        accountCol.setCellValueFactory(new PropertyValueFactory<>("AccountID"));
+        
+        TableColumn<Issue, String> issueCol = new TableColumn<>("IssueDate");
+        issueCol.setCellValueFactory(new PropertyValueFactory<>("IssueDate"));
+        
+        TableColumn<Issue, Integer> returnCol = new TableColumn<>("ReturnDate");
+        returnCol.setCellValueFactory(new PropertyValueFactory<>("ReturnDate"));
+        
+        TableColumn<Issue, Boolean> returnedCol = new TableColumn<>("ReturnedDate");
+        returnedCol.setCellValueFactory(new PropertyValueFactory<>("ReturnedDate"));
+        
+        TableColumn<Issue, Boolean> retCondCol = new TableColumn<>("ReturnedCondition");
+        retCondCol.setCellValueFactory(new PropertyValueFactory<>("ReturnedCondition"));
+        
+        table.getColumns().addAll(idCol, bookCol, accountCol, issueCol, returnCol, returnedCol, retCondCol);
+        setIssueTableData(table);
+        
+    	return table;
+    }
+    
     //========GET SELECTED ACCOUNTS TABLE
     public void getSelectedRowAccounts(TableView<Accounts> tb, VBox vb, ListView<String> li) {
     	
