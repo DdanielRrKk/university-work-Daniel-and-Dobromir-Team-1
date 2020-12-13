@@ -79,14 +79,14 @@ public class adminMenuController implements Initializable
     
     void EmptyTextFields()
     {
-    	username.setText(null);
-    	password.setText(null);
-    	firstName.setText(null);
-    	lastName.setText(null);
-    	ucn.setText(null);
-    	phoneNumber.setText(null);
-    	email.setText(null);
-    	address.setText(null);
+    	username.setText("");
+    	password.setText("");
+    	firstName.setText("");
+    	lastName.setText("");
+    	ucn.setText("");
+    	phoneNumber.setText("");
+    	email.setText("");
+    	address.setText("");
     }
 
     @FXML
@@ -225,6 +225,7 @@ public class adminMenuController implements Initializable
 		}	
 		
 		validData = checkForSpecialCharacters(infoMessage);
+		validData = checkMinSize(infoMessage);
 		
 		if(validData == false)
 		{
@@ -290,5 +291,59 @@ public class adminMenuController implements Initializable
 		return true;
 	}
 	
-
+	private boolean checkMinSize(StringBuilder infoMessage)
+	{
+		boolean validData = true;		
+		DataValidator oDataValidator = new DataValidator();
+		
+		if(!oDataValidator.validateMinSize(username.getText(), 3))
+		{
+			infoMessage.append("Username field must be at least 3 characters long.\n");
+			validData = false;
+		}
+		
+		if(!oDataValidator.validateMinSize(firstName.getText(), 1))
+		{
+			infoMessage.append("First Name field must be at least 1 characters long.\n");
+			validData = false;
+		}
+		
+		if(!oDataValidator.validateMinSize(lastName.getText(), 1))
+		{
+			infoMessage.append("Last Name field must be at least 1 characters long.\n");
+			validData = false;
+		}
+		
+		if(!oDataValidator.validateMinSize(ucn.getText(), 10))
+		{
+			infoMessage.append("UCN field must be at least 10 characters long.\n");
+			validData = false;
+		}
+		
+		if(!oDataValidator.validateMinSize(phoneNumber.getText(), 10))
+		{
+			infoMessage.append("Phone Number field must be at least 10 characters long.\n");
+			validData = false;
+		}
+		
+		if(!oDataValidator.validateMinSize(email.getText(), 5))
+		{
+			infoMessage.append("Email field must be at least 5 characters long.\n");
+			validData = false;
+		}
+		
+		if(!oDataValidator.validateMinSize(address.getText(), 20))
+		{
+			infoMessage.append("Address field must be at least 20 characters long.\n");
+			validData = false;
+		}
+		
+		if(validData == false)
+		{
+			return false;
+		}
+		
+		return true;
+	}
+	
 }
