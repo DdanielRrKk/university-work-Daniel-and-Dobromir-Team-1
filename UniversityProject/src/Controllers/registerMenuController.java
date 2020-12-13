@@ -110,13 +110,28 @@ public class registerMenuController {
 	    		errFlag=true;
 	    	}
 	    	
-	    	p=this.checkSize();
+	    	p=this.checkMinSize();
 	    	if(p.getValue()==true) {
-	    		if(p.getKey().equals("Username") || p.getKey().equals("Username")) {
+	    		if(p.getKey().equals("Username") || p.getKey().equals("Password")) {
 	    			alert.setContentText(p.getKey()+" must be at least 10 characters long");	    			
 	    		}
 	    		else {
 	    			alert.setContentText(p.getKey()+" must be 10 characters long");
+	    		}
+	    		alert.setTitle("Warning");
+	    		alert.setHeaderText(null);
+	    		alert.setGraphic(null);
+	    		alert.showAndWait();
+	    		errFlag=true;
+	    	}
+	    	
+	    	p=this.checkMaxSize();
+	    	if(p.getValue()==true) {
+	    		if(p.getKey().equals("Address")) {
+	    			alert.setContentText(p.getKey()+" must be at most 50 characters long");	    			
+	    		}
+	    		else {
+	    			alert.setContentText(p.getKey()+" must be at most 20 characters long");
 	    		}
 	    		alert.setTitle("Warning");
 	    		alert.setHeaderText(null);
@@ -222,13 +237,25 @@ public class registerMenuController {
     	return p;
     }
     
-    private Pair<String,Boolean> checkSize() {
+    private Pair<String,Boolean> checkMinSize() {
     	Pair<String,Boolean> p = new Pair<>("",false);
     	
     	if(reg_user.getText().length()<10) { p=new Pair<>("Username",true); }
     	if(reg_pass.getText().length()<10) { p=new Pair<>("Password",true); }
-    	if(reg_phoneText.getText().length()<10 || reg_phoneText.getText().length()>10) { p=new Pair<>("Phone Number",true); }
-    	if(reg_ucn.getText().length()<10 || reg_ucn.getText().length()>10) { p=new Pair<>("UCN",true); }
+    	if(reg_phoneText.getText().length() != 10) { p=new Pair<>("Phone Number",true); }
+    	if(reg_ucn.getText().length() != 10) { p=new Pair<>("UCN",true); }
+    	
+    	return p;
+    }
+    
+    private Pair<String,Boolean> checkMaxSize() {
+    	Pair<String,Boolean> p = new Pair<>("",false);
+    	
+    	if(reg_user.getText().length()>20) { p=new Pair<>("Username",true); }
+    	if(reg_pass.getText().length()>20) { p=new Pair<>("Password",true); }
+    	if(reg_fNameText.getText().length()>20) { p=new Pair<>("First Name",true); }
+    	if(reg_lNameText.getText().length()>20) { p=new Pair<>("Last Name",true); }
+    	if(reg_addressText.getText().length()>50) { p=new Pair<>("Address",true); }
     	
     	return p;
     }
