@@ -161,15 +161,6 @@ public class readerMenuController implements Initializable {
     		infoBox("This book is not currently available.", null, "Books");
     		return;
     	}
-    	
-    	for(Issue obj : issueTable.getItems())
-    	{
-    		if(obj.getBookID() == oBook.getID())
-    		{
-    			infoBox("You have already requested to borrow this book.", null, "Books");
-    			return;
-    		}
-    	}
     	List<Issue> oList = null;
     	try {
 			oList = oIssueData.SelectAll();
@@ -179,9 +170,9 @@ public class readerMenuController implements Initializable {
 		}
     	for(Issue i : oList)
     	{
-    		if(i.getBookID() == oBook.getID())
+    		if(i.getBookID() == oBook.getID() && i.getReturnedCondition() == 10)
     		{
-    			infoBox("Somebody has already requested to borrow this book.", null, "Books");
+    			infoBox("There has already been a request to borrow this book.", null, "Books");
     			return;
     		}
     	}
