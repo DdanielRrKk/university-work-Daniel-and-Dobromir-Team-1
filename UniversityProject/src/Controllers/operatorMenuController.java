@@ -237,14 +237,30 @@ public class operatorMenuController {
     	    		return;
     	    	}
     	    	
-    	    	p=checkSize(uName.getText(), pass.getText(), phone.getText(), ucn.getText());
+    	    	p=checkMinSize(uName.getText(), pass.getText(), phone.getText(), ucn.getText());
     	    	if(p.getValue()==true) {
     	    		Alert alert = new Alert(AlertType.INFORMATION, "", ButtonType.OK);
-    	    		if(p.getKey().equals("Username") || p.getKey().equals("Username")) {  	    			
+    	    		if(p.getKey().equals("Username") || p.getKey().equals("Password")) {  	    			
     	    			alert.setContentText(p.getKey()+" must be at least 10 characters long");	    			
     	    		}
     	    		else {
     	    			alert.setContentText(p.getKey()+" must be 10 characters long");
+    	    		}
+    	    		alert.setTitle("Warning");
+    	    		alert.setHeaderText(null);
+    	    		alert.setGraphic(null);
+    	    		alert.showAndWait();
+    	    		return;
+    	    	}
+    	    	
+    	    	p=checkMaxSize(uName.getText(), pass.getText(), fName.getText(), lName.getText(), address.getText());
+    	    	if(p.getValue()==true) {
+    	    		Alert alert = new Alert(AlertType.INFORMATION, "", ButtonType.OK);
+    	    		if(p.getKey().equals("Address")) {  	    			
+    	    			alert.setContentText(p.getKey()+" must be at most 50 characters long");	    			
+    	    		}
+    	    		else {
+    	    			alert.setContentText(p.getKey()+" must be at most 20 characters long");
     	    		}
     	    		alert.setTitle("Warning");
     	    		alert.setHeaderText(null);
@@ -809,13 +825,25 @@ public class operatorMenuController {
     	return p;
     }
     
-    private Pair<String,Boolean> checkSize(String uName, String pass, String phone, String ucn) {
+    private Pair<String,Boolean> checkMinSize(String uName, String pass, String phone, String ucn) {
     	Pair<String,Boolean> p = new Pair<>("",false);
     	
     	if(uName.length()<10) { p=new Pair<>("Username",true); }
     	if(pass.length()<10) { p=new Pair<>("Password",true); }
     	if(phone.length() != 10) { p=new Pair<>("Phone Number",true); }
     	if(ucn.length() != 10) { p=new Pair<>("UCN",true); }
+    	
+    	return p;
+    }
+    
+    private Pair<String,Boolean> checkMaxSize(String uName, String pass, String fName, String lName, String address) {
+    	Pair<String,Boolean> p = new Pair<>("",false);
+    	
+    	if(uName.length()>20) { p=new Pair<>("Username",true); }
+    	if(pass.length()>20) { p=new Pair<>("Password",true); }
+    	if(fName.length()>20) { p=new Pair<>("First Name",true); }
+    	if(lName.length()>20) { p=new Pair<>("Last Name",true); }
+    	if(address.length()>50) { p=new Pair<>("Address",true); }
     	
     	return p;
     }
