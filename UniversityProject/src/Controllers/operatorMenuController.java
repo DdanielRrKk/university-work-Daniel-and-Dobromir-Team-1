@@ -136,6 +136,22 @@ public class operatorMenuController {
             		alert.showAndWait();
             		return;
             	}
+            	
+            	Pair<String,Boolean> p=checkBooksSize(title.getText(), author.getText(), genre.getText());
+    	    	if(p.getValue()==true) {
+    	    		Alert alert = new Alert(AlertType.INFORMATION, "", ButtonType.OK);
+    	    		if(p.getKey().equals("Title")) {  	    			
+    	    			alert.setContentText(p.getKey()+" must be at most 50 characters long");	    			
+    	    		}
+    	    		else {
+    	    			alert.setContentText(p.getKey()+" must be at most 20 characters long");
+    	    		}
+    	    		alert.setTitle("Warning");
+    	    		alert.setHeaderText(null);
+    	    		alert.setGraphic(null);
+    	    		alert.showAndWait();
+    	    		return;
+    	    	}
             	Alert alert = new Alert(AlertType.INFORMATION, "You have successfuly created an Book", ButtonType.OK);
         		alert.setTitle("Success");
         		alert.setHeaderText(null);
@@ -774,6 +790,16 @@ public class operatorMenuController {
 		}
     	
     	return false;
+    }
+    
+    private Pair<String,Boolean> checkBooksSize(String title, String author, String genre) {
+    	Pair<String,Boolean> p = new Pair<>("",false);
+    	
+    	if(title.length()>50) { p=new Pair<>("Title",true); }
+    	if(author.length()>20) { p=new Pair<>("Author",true); }
+    	if(genre.length()>20) { p=new Pair<>("Genre",true); }
+    	
+    	return p;
     }
     
     private Pair<String,Boolean> checkExistingAccount(String uName, String phone, String email, String ucn) {
