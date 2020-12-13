@@ -436,7 +436,7 @@ public class OperatorFunctions {
  	    				    		boo.setCondition(choices.indexOf(s)+1);
  	    				    		bdi.UpdateWhereID(i.getBookID(), boo);
  	    				    		
- 	    				    		if((choices.indexOf(s)!=boo.getCondition()) && (i.getReturnedDate().after(i.getReturnDate()))) {
+ 	    				    		if((choices.indexOf(s)!=boo.getCondition()-1) && (i.getReturnedDate().after(i.getReturnDate()))) {
  	    				    			Accounts acc=adi.SelectWhereID(i.getAccountID());
  	    								
  	    								if(acc.getRatingID()>=2) {
@@ -445,7 +445,7 @@ public class OperatorFunctions {
  	    								
  	    								adi.UpdateWhereID(i.getAccountID(), acc);
  	    				    		}
- 	    				    		else if((choices.indexOf(s)!=boo.getCondition()) || (i.getReturnedDate().after(i.getReturnDate()))){
+ 	    				    		else if((choices.indexOf(s)!=boo.getCondition()-1) || (i.getReturnedDate().after(i.getReturnDate()))){
  	    				    			// rating stays the same
  	    				    		}
  	    				    		else {
