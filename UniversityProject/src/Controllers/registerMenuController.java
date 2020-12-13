@@ -188,7 +188,7 @@ public class registerMenuController {
     	
     	if(reg_fNameText.getText().matches("^[a-zA-Z]*$") == false) { p=new Pair<>("First Name",true); }
     	if(reg_lNameText.getText().matches("^[a-zA-Z]*$") == false) { p=new Pair<>("Last Name",true); }
-    	if(reg_addressText.getText().matches("^[a-zA-Z0-9]*$") == false) { p=new Pair<>("Address",true); }
+    	if(reg_addressText.getText().matches("^[a-zA-Z0-9.,-]*$") == false) { p=new Pair<>("Address",true); }
     	
     	return p;
     }
