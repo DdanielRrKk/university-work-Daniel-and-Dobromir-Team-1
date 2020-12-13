@@ -182,11 +182,14 @@ public class OperatorFunctions {
 				    		e.printStackTrace();
 				    	}
 						
-						if(notifyCount!=tempNotifyCount) {
+						if(notifyCount < tempNotifyCount) {
 							registerFlag=tempRegisterFlag;
 							issueFlag=tempIssueFlag;
 							returnedFlag=tempReturnedFlag;
 							
+							notifyCount=tempNotifyCount;
+						}
+						else {
 							notifyCount=tempNotifyCount;
 						}
 						
