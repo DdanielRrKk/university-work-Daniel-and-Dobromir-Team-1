@@ -14,6 +14,7 @@ import BusinessLogic.OperatorFunctions.HBoxCell;
 import Interfaces.Main;
 import Model.Accounts;
 import Model.Books;
+import Model.Issue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -65,6 +66,9 @@ public class operatorMenuController {
 
     @FXML
     private Button opr_showAllBooksBtn;
+    
+    @FXML
+    private Button opr_showAllIssuesBtn;
 
     @FXML
     private Button opr_searchReaderBtn;
@@ -732,6 +736,24 @@ public class operatorMenuController {
     	VBox vb=new VBox();
     	vb.getChildren().add(new Label("All Readers"));
     	vb.getChildren().add(new Label("Total Readers: "+table.getItems().size()));
+    	vb.getChildren().add(table);
+    	
+    	vb.setAlignment(Pos.CENTER);
+    	vb.setSpacing(5);
+    	
+    	opr_border.setCenter(vb);
+    }
+    
+    //=======================================SHOW ALL ISSUES
+    @FXML
+    void showAllIssues(ActionEvent event) {
+    	opr_border.setRight(null);
+
+    	TableView<Issue> table = of.makeIssueTable();
+    	
+    	VBox vb=new VBox();
+    	vb.getChildren().add(new Label("All Issues"));
+    	vb.getChildren().add(new Label("Total Issues: "+table.getItems().size()));
     	vb.getChildren().add(table);
     	
     	vb.setAlignment(Pos.CENTER);
