@@ -795,7 +795,7 @@ public class operatorMenuController {
     	
     	if(fName.matches("^[a-zA-Z]*$") == false) { p=new Pair<>("First Name",true); }
     	if(lName.matches("^[a-zA-Z]*$") == false) { p=new Pair<>("Last Name",true); }
-    	if(address.matches("^[a-zA-Z0-9]*$") == false) { p=new Pair<>("Address",true); }
+    	if(address.matches("^[a-zA-Z0-9.,-]*$") == false) { p=new Pair<>("Address",true); }
     	
     	return p;
     }
