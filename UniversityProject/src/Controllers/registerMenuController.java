@@ -262,6 +262,6 @@ public class registerMenuController {
     
     @FXML
     void reg_backToStartManu(ActionEvent event) {
-    	Main.getInstance().setScene("../Interfaces/startMenu.fxml");
+    	Main.getInstance().setScene("/Interfaces/startMenu.fxml");
     }
 }
