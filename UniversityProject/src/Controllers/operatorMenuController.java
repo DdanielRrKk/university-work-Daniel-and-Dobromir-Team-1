@@ -784,7 +784,7 @@ public class operatorMenuController {
     @FXML
     void opr_LoggingOut(ActionEvent event) {
     	of.stopThread();
-    	Main.getInstance().setScene("../Interfaces/logInMenu.fxml");   	
+    	Main.getInstance().setScene("/Interfaces/logInMenu.fxml");   	
     }
     
     //=======FOR VBOX
